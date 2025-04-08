@@ -15,7 +15,7 @@ importers:
   packages/cli:
     dependencies:
       '@deot/env-dever':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../dever
       commander:
         specifier: ^13.1.0
@@ -49,10 +49,10 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       '@deot/env-shared':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../shared
       '@deot/env-vue':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../vue
       '@deot/style':
         specifier: ^1.1.0
@@ -73,10 +73,10 @@ importers:
   packages/index:
     dependencies:
       '@deot/env-deps':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../deps
       '@deot/env-dever':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../dever
 
   packages/shared: {}
@@ -84,7 +84,7 @@ importers:
   packages/vue:
     dependencies:
       '@deot/env-shared':
-        specifier: '*'
+        specifier: ^1.0.1
         version: link:../shared
       '@testing-library/vue':
         specifier: ^8.1.0
