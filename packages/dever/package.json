@@ -27,6 +27,7 @@
     "ejs": "^3.1.10",
     "fs-extra": "^11.3.0",
     "inquirer": "^12.5.2",
+    "lodash-es": "^4.17.21",
     "vite": "^6.2.5"
   },
   "devDependencies": {}

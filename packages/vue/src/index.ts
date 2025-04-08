@@ -15,6 +15,7 @@ export default (options: Options, packageFolderName?: string) => {
 			routesFolder: [
 				{
 					src: `${workspace}/${packageFolderName}/pages`,
+					path: `${packageFolderName}/`
 				}
 			]
 		};

@@ -5,12 +5,10 @@ import { setupLayouts } from 'virtual:generated-layouts';
 const isDev = import.meta.env.MODE === 'development';
 
 const base = '/shared';
-const realRoutes = isDev
-	? setupLayouts(routes).find(i => i.path === base).children.map((i) => {
-			i.path = `/${i.path}`;
-			return i;
-		})
-	: setupLayouts(routes);
+const realRoutes = setupLayouts(routes).find(i => i.path === base).children.map((i) => {
+	i.path = `/${i.path}`;
+	return i;
+});
 
 export const router = createRouter({
 	history: createWebHistory(isDev ? base : '/'),

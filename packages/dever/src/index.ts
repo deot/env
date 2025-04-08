@@ -6,7 +6,7 @@ import { Utils, Shell } from '@deot/dev-shared';
 import { Locals } from '@deot/env-shared';
 import fs from 'fs-extra';
 import type { InlineConfig } from 'vite';
-import _ from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { build as createBuild, createServer, mergeConfig } from 'vite';
 import createPlugins from './plugins';
 import { generateVirtualHtml } from './utils';
@@ -68,7 +68,14 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		css: {
 			preprocessorOptions: {
 				scss: {
-					additionalData: fs.readFileSync(require$.resolve('@deot/style/src/mixins/bem.scss'))
+					additionalData: (() => {
+						// 本地环境和真实环境存在差异，这里待优化
+						try {
+							return fs.readFileSync(path.resolve(locals.cwd, './node_modules/@deot/style/src/mixins/bem.scss'));
+						} catch {
+							return fs.readFileSync(require$.resolve('@deot/style/src/mixins/bem.scss'));
+						}
+					})()
 				}
 			}
 		},
@@ -99,7 +106,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		const dirs = options.packageFolderName ? [options.packageFolderName] : locals.packageFolderNames;
 
 		for (let i = 0; i < dirs.length; i++) {
-			let newOptions = _.cloneDeep(options$);
+			let newOptions = cloneDeep(options$);
 			const packageFolderName = dirs[i];
 			let tempPath = '';
 			if (!fs.existsSync(path.resolve(locals.workspaceDir, packageFolderName, './index.html'))) {
