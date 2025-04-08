@@ -9,9 +9,10 @@ import vueLayouts from 'vite-plugin-vue-layouts';
 export default (options: Options, packageFolderName?: string) => {
 	const { workspace, packageFolderNames, sharedPackageFolderName } = Locals.impl();
 	const packages$ = [...packageFolderNames] as string[];
-	let uvrOptions;
+	let uvrOptions: Options = { dts: false };
 	if (options.build && packageFolderName) {
 		uvrOptions = {
+			...uvrOptions,
 			routesFolder: [
 				{
 					src: `${workspace}/${packageFolderName}/pages`,
@@ -21,6 +22,7 @@ export default (options: Options, packageFolderName?: string) => {
 		};
 	} else {
 		uvrOptions = {
+			...uvrOptions,
 			routesFolder: packages$
 				.map((packageFolderName$) => {
 					return {
