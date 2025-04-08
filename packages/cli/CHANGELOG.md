@@ -1,5 +1,13 @@
 # @deot/env-cli ChangeLog
 
+## v1.0.3
+
+_2025-04-08_
+
+### Features
+
+- feat(vue): router/dts disabled ([40e8f60](https://github.com/deot/env/commit/40e8f6018bd6e8e47f9733a47520301f0262f763))
+
 ## v1.0.2
 
 _2025-04-08_
