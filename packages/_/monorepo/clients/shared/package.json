@@ -1,0 +1,14 @@
+{
+  "name": "@clients/shared",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+  }
+}

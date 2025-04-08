@@ -1,0 +1,14 @@
+{
+  "name": "@deot/env-deps",
+  "version": "1.0.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@deot/dev-commitlint": "^2.9.1",
+    "@deot/dev-deps": "^2.9.1",
+    "@deot/dev-eslint": "^2.9.1",
+    "@deot/dev-stylelint": "^2.9.2"
+  }
+}

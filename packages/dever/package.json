@@ -1,0 +1,33 @@
+{
+  "name": "@deot/env-dever",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "shared.config.ts"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@deot/env-shared": "*",
+    "@deot/env-vue": "*",
+    "@deot/dev-shared": "^2.9.1",
+    "@deot/style": "^1.1.0",
+    "ejs": "^3.1.10",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.5.2",
+    "vite": "^6.2.5"
+  },
+  "devDependencies": {}
+}
