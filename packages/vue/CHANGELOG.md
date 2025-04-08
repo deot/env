@@ -1,5 +1,13 @@
 # @deot/env-vue ChangeLog
 
+## v1.0.2
+
+_2025-04-08_
+
+### Bugfixes
+
+- fix: dependencies & unexpected build ([7d589b9](https://github.com/deot/env/commit/7d589b92dbb13c0e052efcc01ce78f1b7a8626dc))
+
 ## v1.0.1
 
 _2025-04-08_
