@@ -65,20 +65,26 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 
 			}
 		},
-		css: {
-			preprocessorOptions: {
-				scss: {
-					additionalData: (() => {
-						// 本地环境和真实环境存在差异，这里待优化
-						try {
-							return fs.readFileSync(path.resolve(locals.cwd, './node_modules/@deot/style/src/mixins/bem.scss'));
-						} catch {
-							return fs.readFileSync(require$.resolve('@deot/style/src/mixins/bem.scss'));
-						}
-					})()
-				}
+		css: (() => {
+			let has = false;
+			try {
+				// 本地环境和真实环境存在差异，这里待优化
+				// eslint-disable-next-line @stylistic/max-len
+				has = fs.existsSync(path.resolve(locals.cwd, './node_modules/@deot/style/src/mixins/bem.scss')) || fs.existsSync(require$.resolve('@deot/style/src/mixins/bem.scss'));
+			} catch {
+				has = false;
 			}
-		},
+
+			return !has
+				? {}
+				: {
+						preprocessorOptions: {
+							scss: {
+								additionalData: '@use "@deot/style/src/mixins/bem.scss" as *;'
+							}
+						}
+					};
+		})()
 	};
 
 	const devOptions = {
