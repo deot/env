@@ -1,5 +1,13 @@
 # @deot/env ChangeLog
 
+## v1.0.4
+
+_2025-04-09_
+
+### Bugfixes
+
+- fix(dever): rules must be written before any other rules ([f7ad7cb](https://github.com/deot/env/commit/f7ad7cb62d6c427508dcbe7889fd07fb980d1983))
+
 ## v1.0.3
 
 _2025-04-08_

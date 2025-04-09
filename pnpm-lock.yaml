@@ -15,7 +15,7 @@ importers:
   packages/cli:
     dependencies:
       '@deot/env-dever':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: link:../dever
       commander:
         specifier: ^13.1.0
@@ -64,13 +64,13 @@ importers:
   packages/index:
     dependencies:
       '@deot/env-cli':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: link:../cli
       '@deot/env-deps':
         specifier: ^1.0.2
         version: link:../deps
       '@deot/env-dever':
-        specifier: ^1.0.3
+        specifier: ^1.0.4
         version: link:../dever
 
   packages/shared: {}

@@ -1,6 +1,6 @@
 {
   "name": "@deot/env",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,8 +11,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@deot/env-cli": "^1.0.3",
+    "@deot/env-cli": "^1.0.4",
     "@deot/env-deps": "^1.0.2",
-    "@deot/env-dever": "^1.0.3"
+    "@deot/env-dever": "^1.0.4"
   }
 }
