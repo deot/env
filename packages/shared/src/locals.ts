@@ -29,7 +29,7 @@ interface Config {
 	sharedPackageFolderName: string;
 }
 
-export const getPackageName = (packageFolderName$: string, workspace$?: string) => {
+export const getPackageName = (packageFolderName$: string, workspace$: string) => {
 	const { workspace, packageName } = impl(workspace$);
 	if (
 		!workspace
@@ -41,15 +41,15 @@ export const getPackageName = (packageFolderName$: string, workspace$?: string) 
 	}
 };
 
-export const getPackageFolderName = (packageName$: string, workspace$?: string) => {
+export const getPackageFolderName = (packageName$: string, workspace$: string) => {
 	const { workspace, packageName } = impl(workspace$);
 	if (!workspace || packageName$ === packageName) return '';
 
 	return packageName$?.replace(new RegExp(`${packageName}-?`, 'g'), '');
 };
 
-export const getRealPackageName = (names?: string, workspace$?: string) => {
-	return names?.split(',').map((name) => {
+export const getRealPackageName = (names: string, workspace$: string) => {
+	return names.split(',').map((name) => {
 		const { workspace, packageName, workspaceDir } = impl(workspace$);
 		if (!workspace || !name || name === '*') return name;
 		if ((name as any).includes(packageName)) {
@@ -65,11 +65,10 @@ export const getRealPackageName = (names?: string, workspace$?: string) => {
 };
 
 const configMap: { [key: string]: Config } = {};
-export const impl = (workspace?: string) => {
-	/* istanbul ignore next -- @preserve */
-	workspace = typeof workspace === 'undefined' ? 'clients' : workspace;
+export const impl = (workspace: string) => {
+	const isMonorepo = path.resolve(cwd, workspace || './') !== cwd;
+
 	if (configMap[workspace]) return configMap[workspace];
-	const isMonorepo = !!workspace;
 	workspace = isMonorepo ? workspace : '';
 
 	const workspaceDir = path.resolve(cwd, workspace);

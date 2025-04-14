@@ -7,44 +7,58 @@ import vueRouter from 'unplugin-vue-router/vite';
 import vueLayouts from 'vite-plugin-vue-layouts';
 
 export default (options: Options, packageFolderName?: string) => {
-	const { workspace, packageFolderNames, sharedPackageFolderName } = Locals.impl();
+	const { workspace, packageFolderNames, sharedPackageFolderName } = Locals.impl(options.workspace);
 	const packages$ = [...packageFolderNames] as string[];
+	const workspaceDir = workspace ? `${workspace}/` : '';
 	let uvrOptions: Options = { dts: false };
-	if (options.build && packageFolderName) {
+
+	if (options.build && workspace && packageFolderName) {
 		uvrOptions = {
 			...uvrOptions,
 			routesFolder: [
 				{
-					src: `${workspace}/${packageFolderName}/pages`,
+					src: `${workspaceDir}${packageFolderName}/pages`,
 					path: `${packageFolderName}/`
 				}
 			]
 		};
-	} else {
+	} else if (workspace) {
 		uvrOptions = {
 			...uvrOptions,
 			routesFolder: packages$
 				.map((packageFolderName$) => {
 					return {
-						src: `${workspace}/${packageFolderName$}/pages`,
+						src: `${workspaceDir}${packageFolderName$}/pages`,
 						path: `${packageFolderName$}/`
 					};
 				}).concat([
 					{
-						src: `${workspace}/${sharedPackageFolderName}/examples/pages`,
+						src: `${workspaceDir}${sharedPackageFolderName}/examples/pages`,
 						path: `${sharedPackageFolderName}/`
 					}
 				])
 		};
-	};
+	} else {
+		uvrOptions = {
+			...uvrOptions,
+			routesFolder: [
+				{
+					src: `src/pages`,
+					path: `/`
+				}
+			]
+		};
+	}
 	return defineConfig({
 		plugins: [
 			vueRouter(uvrOptions),
 			vueLayouts({
-				layoutsDirs: `${sharedPackageFolderName}/layouts`,
-				pagesDirs: packages$
-					.map(packageFolderName$ => `${workspace}/${packageFolderName$}/pages`)
-					.concat([`${workspace}/${sharedPackageFolderName}/examples/pages`])
+				layoutsDirs: workspace ? `${sharedPackageFolderName}/layouts` : 'src/layouts',
+				pagesDirs: workspace
+					? packages$
+							.map(packageFolderName$ => `${workspaceDir}${packageFolderName$}/pages`)
+							.concat([`${workspaceDir}${sharedPackageFolderName}/examples/pages`])
+					: ['src/pages']
 			}),
 			vue(),
 			vueJsx()

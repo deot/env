@@ -15,7 +15,7 @@ describe('shared.ts', () => {
 		expect(Locals.getRealPackageName('*', 'packages')).toBe('*');
 		expect(Locals.getRealPackageName('index', 'packages')).toBe('@packages/index');
 		expect(Locals.getRealPackageName('shared', 'packages')).toBe('@packages/shared');
-		expect(Locals.getRealPackageName()).toBe(undefined);
+		expect(Locals.getRealPackageName('', '')).toBe('');
 		expect(Locals.getRealPackageName('index,shared', 'packages')).toBe('@packages/index,@packages/shared');
 		expect(Locals.getRealPackageName(',shared', 'packages')).toBe('@packages/shared');
 		expect(Locals.getRealPackageName('@packages/shared', 'packages')).toBe('@packages/shared');

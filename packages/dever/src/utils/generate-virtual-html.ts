@@ -5,7 +5,7 @@ import { Locals } from '@deot/env-shared';
 import { render } from 'ejs';
 
 export const generateVirtualHtml = (root: string, url: string, defaultFolderName?: string) => {
-	const locals = Locals.impl();
+	const locals = Locals.impl(root);
 	const urls = url.split('/');
 	const packageFolder = urls[0] || urls[1] || defaultFolderName || locals.packageFolderNames[0];
 

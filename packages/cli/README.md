@@ -17,7 +17,7 @@
 ```
 Monorepo
 ├─ .husky
-├─ packages
+├─ clients
 │    ├─ index
 │    │    ├─ __tests__
 │    │    ├─ src

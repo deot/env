@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "version": "1.0.0",
+  "description": "custom helpers",
+  "type": "module",
+  "scripts": {
+    "cli": "../../../node_modules/.bin/tsx ../../cli/src/index.ts",
+    "dev": "npm run cli -- dev --workspace './'",
+    "build": "npm run cli -- build --workspace './'",
+    "test": "npm run cli -- test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deot/env-demo.git"
+  },
+  "devDependencies": {
+    "@deot/env": "*"
+  }
+}

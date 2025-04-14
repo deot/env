@@ -7,7 +7,7 @@ import * as Dever from '@deot/env-dever';
 const require = createRequire(import.meta.url);
 
 const defaultOptions: Option[] = [
-	// new Option('--workspace <string>', 'Workspace', 'packages'),
+	// new Option('--workspace <string>', 'Select Workspace', 'clients'),
 	new Option('--dry-run [boolean]', 'Dry Run'),
 	new Option('--custom <string>', 'Any Custom Info')
 ];
@@ -30,7 +30,7 @@ const addOptions = (ctx: Command, action: any) => {
 program
 	.version(require('../package').version);
 
-// 使用指令参数 如 wya server;
+// 使用指令参数 如 dec *;
 program
 	.usage('<cmd>');
 
@@ -38,6 +38,7 @@ program
 addOptions(
 	program
 		.command('dev')
+		.option('--workspace <string>', 'Select Workspace')
 		.option('--package-name <string>', 'Select PackageName')
 		.description('development mode'),
 	Dever.run
@@ -47,6 +48,8 @@ addOptions(
 addOptions(
 	program
 		.command('build')
+		.option('--workspace <string>', 'Select Workspace')
+		.option('--out-dir <string>', 'Select Build OutDir')
 		.option('--package-name <string>', 'Select PackageName')
 		.description('production mode'),
 	(options: any) => {

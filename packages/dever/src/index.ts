@@ -17,6 +17,8 @@ const require$ = createRequire(process.cwd());
 
 export const run = (options: Options) => Utils.autoCatch(async () => {
 	options = {
+		workspace: 'clients',
+		outDir: 'clients/dist',
 		packageName: '',
 		packageFolderName: '',
 		dryRun: false,
@@ -29,10 +31,10 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 	}
 	if (options.dryRun) return Shell.spawn(`echo development ${dirname}`);
 
-	const locals = Locals.impl();
-	options.packageName = Locals.getRealPackageName(options.packageName);
+	const locals = Locals.impl(options.workspace);
+	options.packageName = Locals.getRealPackageName(options.packageName, options.workspace);
 	if (locals.workspace && !options.packageName) {
-		const promptOptions = await getOptions();
+		const promptOptions = await getOptions(options);
 		options = {
 			...options,
 			...promptOptions
@@ -40,7 +42,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 	}
 
 	if (options.packageName !== '*') {
-		options.packageFolderName = Locals.getPackageFolderName(options.packageName) || options.packageFolderName;
+		options.packageFolderName = Locals.getPackageFolderName(options.packageName, options.workspace) || options.packageFolderName;
 	} else {
 		options.packageName = '';
 	}
@@ -59,6 +61,9 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		},
 		server: {
 			host: true
+		},
+		define: {
+			__BRANCH__: JSON.stringify(process.env.BRANCH)
 		},
 		build: {
 			rollupOptions: {
@@ -86,7 +91,6 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 					};
 		})()
 	};
-
 	const devOptions = {
 		...options
 	};
@@ -100,6 +104,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 	}
 
 	process.env.DEV_OPTIONS = encodeURIComponent(JSON.stringify(devOptions));
+
 	if (!options.build) {
 		options$ = mergeConfig(createPlugins(options), options$);
 
@@ -108,7 +113,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 
 		server.printUrls();
 		server.bindCLIShortcuts({ print: true });
-	} else {
+	} else if (locals.workspace) {
 		const dirs = options.packageFolderName ? [options.packageFolderName] : locals.packageFolderNames;
 
 		for (let i = 0; i < dirs.length; i++) {
@@ -126,7 +131,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			};
 
 			newOptions.build!.rollupOptions!.output = {
-				dir: `./${locals.workspace}/dist/${packageFolderName}`
+				dir: `${options.outDir}/${packageFolderName}`
 			};
 
 			newOptions = mergeConfig(createPlugins(options, packageFolderName), newOptions);
@@ -135,10 +140,14 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 				await fs.remove(tempPath);
 			}
 			await fs.copySync(
-				path.resolve(locals.workspaceDir, `./dist/${packageFolderName}/${packageFolderName}/${tempPath ? '.temp/' : ''}`),
-				path.resolve(locals.workspaceDir, `./dist/${packageFolderName}`),
+				path.resolve(locals.cwd, options.outDir, `./${packageFolderName}/${packageFolderName}/${tempPath ? '.temp/' : ''}`),
+				path.resolve(locals.cwd, options.outDir, `./${packageFolderName}`),
 			);
-			await fs.remove(path.resolve(locals.workspaceDir, `./dist/${packageFolderName}/${packageFolderName}`));
+			await fs.remove(path.resolve(locals.cwd, options.outDir, `./${packageFolderName}/${packageFolderName}`));
 		}
+	} else {
+		let newOptions = cloneDeep(options$);
+		newOptions = mergeConfig(createPlugins(options), newOptions);
+		await createBuild(newOptions);
 	}
 });
