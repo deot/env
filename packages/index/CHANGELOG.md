@@ -1,5 +1,13 @@
 # @deot/env ChangeLog
 
+## v1.0.5
+
+_2025-04-14_
+
+### Features
+
+- feat: add `--workspace` & `--out-dir`(monorepo) & branch & singlerepo ([5c0767a](https://github.com/deot/env/commit/5c0767a63aa930d5a2f7f6df4e2f2afbb5f449a0))
+
 ## v1.0.4
 
 _2025-04-09_
