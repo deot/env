@@ -1,5 +1,13 @@
 # @deot/env-vue ChangeLog
 
+## v1.0.5
+
+_2025-04-14_
+
+### Features
+
+- feat: {workspace}/shared as packageName prefix ([464bf1e](https://github.com/deot/env/commit/464bf1e2627849599c4c4c330e00697b9f5e5627))
+
 ## v1.0.4
 
 _2025-04-14_

@@ -1,5 +1,14 @@
 # @deot/env-cli ChangeLog
 
+## v1.0.6
+
+_2025-04-14_
+
+### Features
+
+- feat: {workspace}/shared as packageName prefix ([464bf1e](https://github.com/deot/env/commit/464bf1e2627849599c4c4c330e00697b9f5e5627))
+- feat(dever): `DEV_OPTIONS` -> `ENV_OPTIONS`, `BRANCH` -> `ENV_DEFINE` ([b5a25ec](https://github.com/deot/env/commit/b5a25ecc9c70071eb3e22fb9d20c5b08e223f7eb))
+
 ## v1.0.5
 
 _2025-04-14_
