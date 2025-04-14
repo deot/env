@@ -52,6 +52,7 @@ export const getRealPackageName = (names: string, workspace$: string) => {
 	return names.split(',').map((name) => {
 		const { workspace, packageName, workspaceDir } = impl(workspace$);
 		if (!workspace || !name || name === '*') return name;
+
 		if ((name as any).includes(packageName)) {
 			name = getPackageFolderName(name, workspace$);
 		}
@@ -64,6 +65,7 @@ export const getRealPackageName = (names: string, workspace$: string) => {
 	}).filter(i => !!i).join(',');
 };
 
+const SHARED_PACKAGE_FOLDER_NAME = 'shared';
 const configMap: { [key: string]: Config } = {};
 export const impl = (workspace: string) => {
 	const isMonorepo = path.resolve(cwd, workspace || './') !== cwd;
@@ -72,12 +74,7 @@ export const impl = (workspace: string) => {
 	workspace = isMonorepo ? workspace : '';
 
 	const workspaceDir = path.resolve(cwd, workspace);
-	const packageDir = path.resolve(cwd);
-	const packageOptions = require$(path.resolve(cwd, 'package.json'));
-	const packageName = `@${workspace}/`;
-	const packageVersion = packageOptions.version;
-
-	const sharedPackageFolderName = isMonorepo ? 'shared' : '';
+	const sharedPackageFolderName = isMonorepo ? SHARED_PACKAGE_FOLDER_NAME : '';
 
 	// 所有包的路径
 	const packageFolderNames: string[] = !isMonorepo || !fs.existsSync(workspaceDir)
@@ -102,6 +99,13 @@ export const impl = (workspace: string) => {
 		pre[packageFolderName$] = path.resolve(workspaceDir, packageFolderName$);
 		return pre;
 	}, {});
+
+	const packageDir = path.resolve(cwd);
+	const packageOptions = require$(path.resolve(cwd, 'package.json'));
+
+	const name = packageOptionsMap[sharedPackageFolderName]?.name || `@${workspace}/${SHARED_PACKAGE_FOLDER_NAME}`;
+	const packageName = `${name.split('/').slice(0, -1).join('/')}/`;
+	const packageVersion = packageOptions.version;
 
 	const config = {
 		cwd,

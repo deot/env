@@ -1,34 +1,44 @@
 import { Locals } from '@deot/env-shared';
 
 describe('shared.ts', () => {
-	it('getPackageName', () => {
-		expect(Locals.getPackageName('index', 'packages')).toBe('@packages/index');
-		expect(Locals.getPackageName('shared', 'packages')).toBe('@packages/shared');
+	it('getPackageName/virtual-dir', () => {
+		expect(Locals.getPackageName('index', 'clients')).toBe('@clients/index');
+		expect(Locals.getPackageName('shared', 'clients')).toBe('@clients/shared');
 	});
 
-	it('getPackageFolderName', () => {
-		expect(Locals.getPackageFolderName('@packages/shared', 'packages')).toBe('shared');
-		expect(Locals.getPackageFolderName('@packages/index', 'packages')).toBe('index');
+	it('getPackageFolderName/virtual-dir', () => {
+		expect(Locals.getPackageFolderName('@clients/shared', 'clients')).toBe('shared');
+		expect(Locals.getPackageFolderName('@clients/index', 'clients')).toBe('index');
 	});
 
-	it('getRealPackageName', () => {
-		expect(Locals.getRealPackageName('*', 'packages')).toBe('*');
-		expect(Locals.getRealPackageName('index', 'packages')).toBe('@packages/index');
-		expect(Locals.getRealPackageName('shared', 'packages')).toBe('@packages/shared');
+	it('getRealPackageName/virtual-dir', () => {
+		expect(Locals.getRealPackageName('*', 'clients')).toBe('*');
+
+		expect(Locals.getRealPackageName('shared', 'clients')).toBe('');
 		expect(Locals.getRealPackageName('', '')).toBe('');
-		expect(Locals.getRealPackageName('index,shared', 'packages')).toBe('@packages/index,@packages/shared');
-		expect(Locals.getRealPackageName(',shared', 'packages')).toBe('@packages/shared');
-		expect(Locals.getRealPackageName('@packages/shared', 'packages')).toBe('@packages/shared');
-		expect(Locals.getRealPackageName('@packages/index,shared', 'packages')).toBe('@packages/index,@packages/shared');
-		// 过滤无效的包
-		expect(Locals.getRealPackageName('@packages/index,abc', 'packages')).toBe('@packages/index');
-		expect(Locals.getRealPackageName('@packages/dev-bb,abc', 'packages')).toBe('');
+		expect(Locals.getRealPackageName('index,shared', 'clients')).toBe('');
 	});
 
-	it('impl', () => {
+	it('getRealPackageName/local-dir', () => {
+		expect(Locals.getRealPackageName('*', 'packages')).toBe('*');
+
+		expect(Locals.getRealPackageName('shared', 'packages')).toBe('@deot/shared');
+		expect(Locals.getRealPackageName('', '')).toBe('');
+		expect(Locals.getRealPackageName('index,shared', 'packages')).toBe('@deot/index,@deot/shared');
+		expect(Locals.getRealPackageName('@deot/shared', 'packages')).toBe('@deot/shared');
+	});
+
+	it('impl/virtual-dir', () => {
+		const it = Locals.impl('clients');
+		expect(it.workspace).toBe('clients');
+		expect(it.packageName).toBe('@clients/');
+		expect(it.packageFolderNames.length === 0).toBe(true);
+	});
+
+	it('impl/local-dir', () => {
 		const it = Locals.impl('packages');
 		expect(it.workspace).toBe('packages');
-		expect(it.packageName).toBe('@packages/');
+		expect(it.packageName).toBe('@deot/');
 		expect(it.packageFolderNames.length > 0).toBe(true);
 	});
 

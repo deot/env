@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@deot/dev':
-        specifier: ^2.9.4
-        version: 2.9.4(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)
+        specifier: ^2.9.5
+        version: 2.9.5(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)
 
   packages/cli:
     dependencies:
@@ -31,8 +31,8 @@ importers:
   packages/deps:
     dependencies:
       '@deot/dev':
-        specifier: ^2.9.4
-        version: 2.9.4(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)
+        specifier: ^2.9.5
+        version: 2.9.5(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)
 
   packages/dever:
     dependencies:
@@ -320,8 +320,8 @@ packages:
   '@deot/dev-dever@2.9.1':
     resolution: {integrity: sha512-Z60fN3OTITp6YA5bui4Kky6k8idLx3D/wfyRmEpBWGIWjVbnkPdYg8ShtilAPr+5FEksk4Bb8fCbOGgOdTgqQg==}
 
-  '@deot/dev-eslint@2.9.2':
-    resolution: {integrity: sha512-KCuFm1Ch+wWppwA5mbXpTfw4Fy8La8vL9Il34PigcwFSf29SP801vvOCySn9QIZTky71J8pWMshWcKfHBImSeg==}
+  '@deot/dev-eslint@2.9.3':
+    resolution: {integrity: sha512-oiVDNJRb/MRyn7j8Q2o+A5/F87ZlJXSvmQUBVcp7LTPi5bpbzbt6/Strm3tbwb1aIVOKe3RBha4Rv/CM5ItDcg==}
 
   '@deot/dev-linker@2.9.1':
     resolution: {integrity: sha512-JASmezTdLPnTe3M72si5uaA8KOv44Ra5ttgRgCVXL8boCFyMId6DRyzJbo3G8xs8yPaOY+0Cw6gGhaie6ocGKQ==}
@@ -350,8 +350,8 @@ packages:
   '@deot/dev-vue@2.9.1':
     resolution: {integrity: sha512-Vu733iL8LKnMAYdw/xZhppD3XpvGQH0cIlsfSEaVP85OmkNzvJJCH7bVNudb47UJgrnqkwsijEO5oISqP9EcIg==}
 
-  '@deot/dev@2.9.4':
-    resolution: {integrity: sha512-QMPbKJODwKM7fuCBjsyRABgPyLsW1Gjf3KjYhxcvLxuK5kdrzoDLKaLIqtbeNhG8+6S89+KgKW2eWeW41I+DnQ==}
+  '@deot/dev@2.9.5':
+    resolution: {integrity: sha512-9XR9t9XglIU+PiHoKSoPrnZLPxVYt2FqupoX3T+I2NZwso7Q5gW1Q4qMz6oSm/jtZiLjXPS/VAXnC0QDn1vYew==}
 
   '@dual-bundle/import-meta-resolve@4.1.0':
     resolution: {integrity: sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==}
@@ -4390,7 +4390,7 @@ snapshots:
       - typescript
       - yaml
 
-  '@deot/dev-eslint@2.9.2(eslint@9.24.0)(typescript@5.8.3)(vue-eslint-parser@10.1.3(eslint@9.24.0))':
+  '@deot/dev-eslint@2.9.3(eslint@9.24.0)(typescript@5.8.3)(vue-eslint-parser@10.1.3(eslint@9.24.0))':
     dependencies:
       '@stylistic/eslint-plugin': 4.2.0(eslint@9.24.0)(typescript@5.8.3)
       '@typescript-eslint/eslint-plugin': 8.29.1(@typescript-eslint/parser@8.29.1(eslint@9.24.0)(typescript@5.8.3))(eslint@9.24.0)(typescript@5.8.3)
@@ -4531,7 +4531,7 @@ snapshots:
       - typescript
       - yaml
 
-  '@deot/dev@2.9.4(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)':
+  '@deot/dev@2.9.5(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(eslint@9.24.0)(postcss@8.5.3)(sass@1.86.3)(stylelint@16.18.0(typescript@5.8.3))(tsx@4.19.3)(typescript@5.8.3)(vite@6.2.5(@types/node@22.14.0)(sass@1.86.3)(tsx@4.19.3)(yaml@2.7.1))(vue-eslint-parser@10.1.3(eslint@9.24.0))(yaml@2.7.1)':
     dependencies:
       '@deot/dev-adder': 2.9.1(@types/node@22.14.0)
       '@deot/dev-builder': 2.9.1(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(tsx@4.19.3)(typescript@5.8.3)(yaml@2.7.1)
@@ -4539,7 +4539,7 @@ snapshots:
       '@deot/dev-commitlint': 2.9.1
       '@deot/dev-deps': 2.9.1
       '@deot/dev-dever': 2.9.1(@testing-library/dom@9.3.4)(@types/node@22.14.0)(@vue/compiler-sfc@3.5.13)(sass@1.86.3)(tsx@4.19.3)(typescript@5.8.3)(yaml@2.7.1)
-      '@deot/dev-eslint': 2.9.2(eslint@9.24.0)(typescript@5.8.3)(vue-eslint-parser@10.1.3(eslint@9.24.0))
+      '@deot/dev-eslint': 2.9.3(eslint@9.24.0)(typescript@5.8.3)(vue-eslint-parser@10.1.3(eslint@9.24.0))
       '@deot/dev-linker': 2.9.1
       '@deot/dev-releaser': 2.9.2(@types/node@22.14.0)
       '@deot/dev-shared': 2.9.1
