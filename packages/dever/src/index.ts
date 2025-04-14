@@ -62,9 +62,17 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		server: {
 			host: true
 		},
-		define: {
-			__BRANCH__: JSON.stringify(process.env.BRANCH)
-		},
+		define: (() => {
+			try {
+				const target = JSON.parse(decodeURIComponent(process.env.ENV_DEFINE || '{}'));
+				return Object.keys(target).reduce((pre, cur) => {
+					pre[cur] = JSON.stringify(target[cur]);
+					return pre;
+				}, {});
+			} catch {
+				return {};
+			}
+		})(),
 		build: {
 			rollupOptions: {
 
@@ -103,7 +111,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		options$.configFile = path.relative(cwd, path.resolve(dirname, '../shared.config.ts'));
 	}
 
-	process.env.DEV_OPTIONS = encodeURIComponent(JSON.stringify(devOptions));
+	process.env.ENV_OPTIONS = encodeURIComponent(JSON.stringify(devOptions));
 
 	if (!options.build) {
 		options$ = mergeConfig(createPlugins(options), options$);
