@@ -13,14 +13,18 @@ export default (options: Options, packageFolderName?: string) => {
 	let uvrOptions: Options = { dts: false };
 
 	if (options.build && workspace && packageFolderName) {
+		const mergePackageFolderNames: string[] = options.mergePackageFolderNames[0] === packageFolderName
+			? options.mergePackageFolderNames
+			: [packageFolderName];
+
 		uvrOptions = {
 			...uvrOptions,
-			routesFolder: [
-				{
-					src: `${workspaceDir}${packageFolderName}/pages`,
-					path: `${packageFolderName}/`
-				}
-			]
+			routesFolder: mergePackageFolderNames.map((packageFolderName$) => {
+				return {
+					src: `${workspaceDir}${packageFolderName$}/pages`,
+					path: `${packageFolderName$}/`
+				};
+			})
 		};
 	} else if (workspace) {
 		uvrOptions = {

@@ -21,6 +21,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		outDir: 'clients/dist',
 		packageName: '',
 		packageFolderName: '',
+		mergePackageFolderNames: [],
 		dryRun: false,
 		build: false,
 		...options
@@ -42,7 +43,12 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 	}
 
 	if (options.packageName !== '*') {
-		options.packageFolderName = Locals.getPackageFolderName(options.packageName, options.workspace) || options.packageFolderName;
+		options.mergePackageFolderNames = options.packageName
+			.split(',')
+			.map((packageName: string) => Locals.getPackageFolderName(packageName, options.workspace))
+			.filter((i: string) => !!i);
+
+		options.packageFolderName = options.mergePackageFolderNames[0];
 	} else {
 		options.packageName = '';
 	}
