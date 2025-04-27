@@ -103,11 +103,21 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		...options
 	};
 
-	if (fs.existsSync(`${cwd}/z.env.config.ts`)) {
-		options$.configFile = path.relative(cwd, path.resolve(cwd, './z.env.config.ts'));
-	} else if (fs.existsSync(`${cwd}/env.config.ts`)) {
-		options$.configFile = path.relative(cwd, path.resolve(cwd, './env.config.ts'));
-	} else {
+	const userConfigFiles = ['z.env.config', 'env.config', 'vite.config'];
+	const allowExt = ['.js', '.ts'];
+	for (let i = 0; i < userConfigFiles.length; i++) {
+		const filename = userConfigFiles[i];
+		for (let j = 0; j < allowExt.length; j++) {
+			const ext = allowExt[j];
+			if (fs.existsSync(`${cwd}/${filename}${ext}`)) {
+				options$.configFile = path.relative(cwd, path.resolve(cwd, `./${filename}${ext}`));
+				break;
+			}
+		}
+		if (options$.configFile) break;
+	}
+
+	if (!options$.configFile) {
 		options$.configFile = path.relative(cwd, path.resolve(dirname, '../shared.config.ts'));
 	}
 
@@ -143,6 +153,12 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			};
 
 			newOptions = mergeConfig(createPlugins(options, packageFolderName), newOptions);
+
+			process.env.ENV_OPTIONS = encodeURIComponent(JSON.stringify({
+				...devOptions,
+				packageFolderName
+			}));
+
 			await createBuild(newOptions);
 			if (tempPath) {
 				await fs.remove(tempPath);
