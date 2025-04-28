@@ -68,17 +68,20 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		server: {
 			host: true
 		},
-		define: (() => {
-			try {
-				const target = JSON.parse(decodeURIComponent(process.env.ENV_DEFINE || '{}'));
-				return Object.keys(target).reduce((pre, cur) => {
-					pre[cur] = JSON.stringify(target[cur]);
-					return pre;
-				}, {});
-			} catch {
-				return {};
-			}
-		})(),
+		define: {
+			...(() => {
+				try {
+					const target = JSON.parse(decodeURIComponent(process.env.ENV_DEFINE || '{}'));
+					return Object.keys(target).reduce((pre, cur) => {
+						pre[cur] = JSON.stringify(target[cur]);
+						return pre;
+					}, {});
+				} catch {
+					return {};
+				}
+			})(),
+			__MULTIPLE_PACKAGE_FOLDER_NAMES__: JSON.stringify(options.mergePackageFolderNames.join(','))
+		},
 		build: {
 			rollupOptions: {
 
