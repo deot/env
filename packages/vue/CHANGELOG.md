@@ -1,5 +1,17 @@
 # @deot/env-vue ChangeLog
 
+## v1.0.6
+
+_2025-04-28_
+
+### Features
+
+- feat: allow build with multiple package ([10adeed](https://github.com/deot/env/commit/10adeedac8ccdacbedc65aaf4271e10adcbbaf60))
+
+### Updates
+
+- chore(shared): force-publish `1.0.4` -> `1.0.5`
+
 ## v1.0.5
 
 _2025-04-14_

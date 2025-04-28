@@ -1,5 +1,13 @@
 # @deot/env-shared ChangeLog
 
+## v1.0.5
+
+_2025-04-28_
+
+### Force Update Package
+
+- `1.0.4` -> `1.0.5`
+
 ## v1.0.4
 
 _2025-04-14_

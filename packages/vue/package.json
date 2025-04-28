@@ -1,6 +1,6 @@
 {
   "name": "@deot/env-vue",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@deot/env-shared": "^1.0.4",
+    "@deot/env-shared": "^1.0.5",
     "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^4.1.2",

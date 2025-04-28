@@ -1,5 +1,20 @@
 # @deot/env-dever ChangeLog
 
+## v1.0.7
+
+_2025-04-28_
+
+### Features
+
+- feat: add `__MULTIPLE_PACKAGE_FOLDER_NAMES__` define ([f0ce81f](https://github.com/deot/env/commit/f0ce81f4201487a7c6b40933dc3fc2fd8466b043))
+- feat: allow build with multiple package ([10adeed](https://github.com/deot/env/commit/10adeedac8ccdacbedc65aaf4271e10adcbbaf60))
+- feat: add `packageFolderName` when build ([f15e2eb](https://github.com/deot/env/commit/f15e2eb2944e3c7ddf2aba1daa93a96abe1a45bc))
+- feat: `layouts` -> `components/layouts` ([f7c2cd2](https://github.com/deot/env/commit/f7c2cd21f609d7bba5856c8245dba7505d33f357))
+
+### Updates
+
+- chore(shared): force-publish `1.0.4` -> `1.0.5`
+
 ## v1.0.6
 
 _2025-04-14_
