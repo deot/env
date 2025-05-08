@@ -15,6 +15,5 @@ export const getOptions = async (options: Options) => {
 	});
 	return {
 		packageFolderName: packageFolderName == ALL_PACKAGE ? undefined : packageFolderName,
-
 	};
 };

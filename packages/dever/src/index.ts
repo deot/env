@@ -40,6 +40,10 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			...options,
 			...promptOptions
 		};
+
+		if (promptOptions.packageFolderName) {
+			options.packageName = Locals.getRealPackageName(options.packageFolderName, options.workspace);
+		}
 	}
 
 	if (options.packageName !== '*') {
@@ -168,6 +172,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 				packageFolderName
 			}));
 
+			await fs.remove(path.resolve(locals.cwd, options.outDir, `./${packageFolderName}`));
 			await createBuild(newOptions);
 			if (tempPath) {
 				await fs.remove(tempPath);
