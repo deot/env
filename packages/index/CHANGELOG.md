@@ -1,5 +1,13 @@
 # @deot/env ChangeLog
 
+## v1.0.8
+
+_2025-05-08_
+
+### Features
+
+- feat(dever): clean before build ([55e21b0](https://github.com/deot/env/commit/55e21b0f56597adcfd134215c05e7ee678a784e1))
+
 ## v1.0.7
 
 _2025-04-28_
