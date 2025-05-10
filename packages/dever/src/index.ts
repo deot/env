@@ -4,6 +4,13 @@ import { fileURLToPath } from 'node:url';
 import type { Options } from '@deot/dev-shared';
 import { Utils, Shell } from '@deot/dev-shared';
 import { Locals } from '@deot/env-shared';
+
+import atImport from 'postcss-import';
+import atUrl from 'postcss-url';
+import flexBugs from 'postcss-flexbugs-fixes';
+import cssnano from 'cssnano';
+import autoprefixer from 'autoprefixer';
+
 import fs from 'fs-extra';
 import type { InlineConfig } from 'vite';
 import { cloneDeep } from 'lodash-es';
@@ -57,6 +64,19 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 		options.packageName = '';
 	}
 
+	const baseCssConfig = options.build
+		? {
+				postcss: {
+					plugins: [
+						atImport(), // @imoport资源，引进使用的代码，而不是@import '../xxx';
+						atUrl(), // css 中 url相对路径转化* inline 为使用base64
+						flexBugs(), // flex优化
+						cssnano(), // 压缩代码，删除重复部分
+						autoprefixer({ remove: false }) // 适配浏览器前缀
+					]
+				}
+			}
+		: {};
 	const { cwd } = locals;
 	let options$: InlineConfig = {
 		root: locals.workspace,
@@ -102,8 +122,9 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			}
 
 			return !has
-				? {}
+				? baseCssConfig
 				: {
+						...baseCssConfig,
 						preprocessorOptions: {
 							scss: {
 								additionalData: '@use "@deot/style/src/mixins/bem.scss" as *;'

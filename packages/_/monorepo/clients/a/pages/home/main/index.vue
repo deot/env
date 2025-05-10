@@ -13,6 +13,11 @@ const handleClick = () => {
 	router.push('/about/main')
 }
 </script>
+<style>
+div {
+	display: flex;
+}
+</style>
 <route lang="json5">
 {
 	meta: {
