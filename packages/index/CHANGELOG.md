@@ -1,5 +1,13 @@
 # @deot/env ChangeLog
 
+## v1.0.9
+
+_2025-05-29_
+
+### Features
+
+- feat(dever): support postcss ([a4c7581](https://github.com/deot/env/commit/a4c7581b29319118f70aea710a4dbad00d6fb656))
+
 ## v1.0.8
 
 _2025-05-08_
