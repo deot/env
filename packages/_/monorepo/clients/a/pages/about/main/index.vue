@@ -10,8 +10,8 @@ const router = useRouter();
 const message = ref('a/About');
 
 const handleClick = () => {
-	router.push('/')
-}
+	router.push('/');
+};
 </script>
 
 <route lang="json5">

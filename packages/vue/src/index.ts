@@ -10,7 +10,16 @@ export default (options: Options, packageFolderName?: string) => {
 	const { workspace, packageFolderNames, sharedPackageFolderName } = Locals.impl(options.workspace);
 	const packages$ = [...packageFolderNames] as string[];
 	const workspaceDir = workspace ? `${workspace}/` : '';
-	let uvrOptions: Options = { dts: false };
+	let uvrOptions: Options = {
+		// dts: false,
+		exclude: [
+			'**/components/**',
+			'**/component/**',
+			'**/common/**',
+			'**/_common/**',
+			'**/*.component.vue'
+		],
+	};
 
 	if (options.build && workspace && packageFolderName) {
 		const mergePackageFolderNames: string[] = options.mergePackageFolderNames[0] === packageFolderName
