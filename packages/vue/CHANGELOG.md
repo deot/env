@@ -1,5 +1,13 @@
 # @deot/env-vue ChangeLog
 
+## v1.0.7
+
+_2025-06-13_
+
+### Features
+
+- feat: avoid components add to routes ([03afe4c](https://github.com/deot/env/commit/03afe4c03820e85b28bb756cc9df7a0cddce7c92))
+
 ## v1.0.6
 
 _2025-04-28_
