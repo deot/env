@@ -11,7 +11,7 @@ export default (options: Options, packageFolderName?: string) => {
 	const packages$ = [...packageFolderNames] as string[];
 	const workspaceDir = workspace ? `${workspace}/` : '';
 	let uvrOptions: Options = {
-		// dts: false,
+		dts: false,
 		exclude: [
 			'**/components/**',
 			'**/component/**',
