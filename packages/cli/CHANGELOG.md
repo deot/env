@@ -1,5 +1,13 @@
 # @deot/env-cli ChangeLog
 
+## v1.0.11
+
+_2025-06-19_
+
+### Updates
+
+- chore(vue): avoid output dts file ([95406f7](https://github.com/deot/env/commit/95406f7ad122f4ae975a3129edc6703a3876bb61))
+
 ## v1.0.10
 
 _2025-06-13_
