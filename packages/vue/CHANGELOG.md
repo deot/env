@@ -1,5 +1,13 @@
 # @deot/env-vue ChangeLog
 
+## v1.0.9
+
+_2025-07-08_
+
+### Updates
+
+- chore: support shared build alone ([8fa4483](https://github.com/deot/env/commit/8fa4483834590bd69cfd38fd84e08fcb748af72c))
+
 ## v1.0.8
 
 _2025-06-19_
