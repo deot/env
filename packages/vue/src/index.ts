@@ -30,7 +30,7 @@ export default (options: Options, packageFolderName?: string) => {
 			...uvrOptions,
 			routesFolder: mergePackageFolderNames.map((packageFolderName$) => {
 				return {
-					src: `${workspaceDir}${packageFolderName$}/pages`,
+					src: `${workspaceDir}${packageFolderName$}${packageFolderName === sharedPackageFolderName ? '/examples' : ''}/pages`,
 					path: `${packageFolderName$}/`
 				};
 			})
