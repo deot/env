@@ -1,6 +1,6 @@
 {
   "name": "@deot/env-dever",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,8 +20,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@deot/env-shared": "^1.0.5",
-    "@deot/env-vue": "^1.0.9",
+    "@deot/env-shared": "^1.0.6",
+    "@deot/env-vue": "^1.0.10",
     "@deot/dev-shared": "^2.9.7",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.1.2",

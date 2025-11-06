@@ -1,5 +1,13 @@
 # @deot/env-deps ChangeLog
 
+## v1.0.6
+
+_2025-11-06_
+
+### Updates
+
+- chore: deps updated ([6269a3c](https://github.com/deot/env/commit/6269a3cd1f74508dee6b1e1b610b41e237730f05))
+
 ## v1.0.5
 
 _2025-04-28_
