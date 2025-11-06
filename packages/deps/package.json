@@ -6,6 +6,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@deot/dev": "^2.9.5"
+    "@deot/dev": "^2.9.7"
   }
 }
