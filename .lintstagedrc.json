@@ -4,5 +4,8 @@
   ],
   "**/*.{js,ts,jsx,tsx,md}": [
     "eslint --fix"
+  ],
+  "*": [
+    "dd-commitlint --file-path"
   ]
 }
