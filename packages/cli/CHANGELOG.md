@@ -1,5 +1,13 @@
 # @deot/env-cli ChangeLog
 
+## v1.0.14
+
+_2026-01-14_
+
+### Updates
+
+- chore: deps updated ([3ddfdf3](https://github.com/deot/env/commit/3ddfdf3bc70f76b306d8d7fec6b8a880ed3156ce))
+
 ## v1.0.13
 
 _2025-11-06_
