@@ -18,7 +18,7 @@ importers:
   packages/cli:
     dependencies:
       '@deot/env-dever':
-        specifier: ^1.0.14
+        specifier: ^1.0.15
         version: link:../dever
       commander:
         specifier: ^14.0.2
@@ -46,7 +46,7 @@ importers:
         specifier: ^1.0.7
         version: link:../shared
       '@deot/env-vue':
-        specifier: ^1.0.11
+        specifier: ^1.0.12
         version: link:../vue
       autoprefixer:
         specifier: ^10.4.23
@@ -88,13 +88,13 @@ importers:
   packages/index:
     dependencies:
       '@deot/env-cli':
-        specifier: ^1.0.14
+        specifier: ^1.0.15
         version: link:../cli
       '@deot/env-deps':
         specifier: ^1.0.7
         version: link:../deps
       '@deot/env-dever':
-        specifier: ^1.0.14
+        specifier: ^1.0.15
         version: link:../dever
 
   packages/shared: {}

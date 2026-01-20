@@ -1,5 +1,13 @@
 # @deot/env-cli ChangeLog
 
+## v1.0.15
+
+_2026-01-20_
+
+### Features
+
+- feat(vue): self repo layouts support ([8f9a221](https://github.com/deot/env/commit/8f9a2219a0b1035b43635053609096d9bec45cbe))
+
 ## v1.0.14
 
 _2026-01-14_
