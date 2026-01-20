@@ -66,7 +66,9 @@ export default (options: Options, packageFolderName?: string) => {
 		plugins: [
 			vueRouter(uvrOptions),
 			vueLayouts({
-				layoutsDirs: workspace ? `${sharedPackageFolderName}/components/layouts` : 'src/components/layouts',
+				layoutsDirs: workspace
+					? [`${sharedPackageFolderName}/components/layouts`, ...packages$.map(i => `${i}/components/layouts`)]
+					: 'src/components/layouts',
 				pagesDirs: workspace
 					? packages$
 							.map(packageFolderName$ => `${workspaceDir}${packageFolderName$}/pages`)
