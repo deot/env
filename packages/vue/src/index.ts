@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import { Locals } from '@deot/env-shared';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import vueRouter from 'unplugin-vue-router/vite';
+import vueRouter from 'vue-router/vite';
 import vueLayouts from 'vite-plugin-vue-layouts';
 
 export default (options: Options, packageFolderName?: string) => {

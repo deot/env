@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import * as path from 'node:path';
 
 import { Locals } from '@deot/env-shared';
-import { render } from 'ejs';
+import ejs from 'ejs';
 
 export const generateVirtualHtml = (root: string, url: string, defaultFolderName?: string) => {
 	const locals = Locals.impl(root);
@@ -29,6 +29,6 @@ export const generateVirtualHtml = (root: string, url: string, defaultFolderName
 			break;
 		}
 	}
-	const html = render(tpl.toString(), { entry });
+	const html = ejs.render(tpl.toString(), { entry });
 	return html;
 };
