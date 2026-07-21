@@ -107,6 +107,8 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			__MULTIPLE_PACKAGE_FOLDER_NAMES__: JSON.stringify(options.mergePackageFolderNames.join(','))
 		},
 		build: {
+			target: 'ios12',
+			cssTarget: 'ios12',
 			rollupOptions: {
 
 			}
