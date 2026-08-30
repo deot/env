@@ -3,20 +3,85 @@
 
 [![build status][ci-image]][ci-url]
 
-# deot/env
+# @deot/env
 
-用于项目开发的仓库统一环境
+`@deot/env` 是面向 Vue/Vite 项目的统一开发环境。它提供 `dec` 命令、Vite 开发与构建流程、约定式页面和布局发现，以及 monorepo 中多应用与 shared 公共层的组织能力。
 
-所有的相关的开发环境，统一更新，升级时如果有多仓库，仅更新此仓库即可，无需同时更新太多依赖性，以追求最新且稳定的项目开发环境
+## 特性
 
-> 需要依赖当前的`tsconfig.json`, `.eslintrc.cjs`等，这些配置项可以用`extends`导出
-> 如果执行`dev`, `test`, `build`需要扩展，可以配置`*.config.ts`来进行扩展
-> 具体可以参考以下`demo`
+- 使用 `dec dev` 和 `dec build` 统一单仓库与多应用 workspace 的开发、构建入口。
+- 根据 workspace 中的 `package.json` 自动建立包名、目录与 Vite alias 映射。
+- 自动发现 Vue 页面与布局，支持应用页面、shared 示例页和多应用路由合并。
+- 缺少应用 `index.html` 时，根据 workspace 根部的 `index.ejs` 和 `index.js/index.ts` 生成入口。
+- 构建时按应用输出独立目录，并提供 PostCSS、Autoprefixer、CSS 压缩和 iOS 12 构建目标。
+- 允许通过 `vite.config`、`ENV_OPTIONS`、`ENV_DEFINE` 和业务环境变量扩展基础配置。
 
-- [demo by @deot/env](https://github.com/deot/env-demo)
-- [site by @deot/env](https://github.com/deot/site)
+## 安装
 
-## Monorepo
+```bash
+pnpm add -D @deot/env
+```
+
+安装聚合包后会同时获得 `dec` CLI、开发服务和 `@deot/dev` 工具链。
+
+## 快速开始
+
+推荐把多个前端应用和公共层放在同一个 workspace 中：
+
+```text
+project/
+├── package.json
+├── pnpm-workspace.yaml
+├── vite.config.js
+└── src/
+    ├── index.ejs
+    ├── preload.js
+    ├── manage/
+    │   ├── package.json
+    │   ├── index.js
+    │   └── pages/
+    ├── mobile/
+    │   ├── package.json
+    │   ├── index.js
+    │   └── pages/
+    └── shared/
+        ├── package.json
+        ├── components/layouts/
+        └── examples/
+```
+
+在根 `package.json` 中声明命令：
+
+```json
+{
+  "scripts": {
+    "cli:dev": "dec dev --workspace src",
+    "cli:build": "dec build --workspace src --out-dir dist",
+    "dev": "cross-env BRANCH=dev npm run cli:dev",
+    "build": "cross-env BRANCH=prod npm run cli:build"
+  },
+  "devDependencies": {
+    "@deot/env": "^1.0.15"
+  }
+}
+```
+
+运行开发服务时可以在交互列表中选择全部应用、单个应用或 shared：
+
+```bash
+npm run dev
+```
+
+构建全部应用，或明确构建一个应用：
+
+```bash
+npm run build
+dec build --workspace src --out-dir dist --package-name manage
+```
+
+完整安装与首个项目见[快速开始](./docs/getting-started.md)。
+
+## 包
 
 [npm-cli-image]: https://img.shields.io/npm/v/@deot/env-cli
 [npm-cli-url]: https://www.npmjs.com/package/@deot/env-cli
@@ -36,75 +101,48 @@
 [npm-image]: https://img.shields.io/npm/v/@deot/env
 [npm-url]: https://www.npmjs.com/package/@deot/env
 
-| 包名                        | 版本                                         | 说明                                     |
-| ------------------------- | ------------------------------------------ | -------------------------------------- |
-| [cli](packages/cli)       | [![npm][npm-cli-image]][npm-cli-url]       | 开发指令集`dev`、`build`、`test`、`link`、`add` |
-| [deps](packages/deps)     | [![npm][npm-deps-image]][npm-deps-url]     | 额外依赖提取                                 |
-| [dever](packages/dever)   | [![npm][npm-dever-image]][npm-dever-url]   | 开发服务集成                                 |
-| [shared](packages/shared) | [![npm][npm-shared-image]][npm-shared-url] | 开发共享资源                                 |
-| [vue](packages/vue)       | [![npm][npm-vue-image]][npm-vue-url]       | Vue集成包                                 |
-| [index](packages/index)   | [![npm][npm-image]][npm-url]               | 当前所有包的合集                               |
+| 包 | 版本 | 职责 |
+| --- | --- | --- |
+| [`@deot/env`](./packages/index) | [![npm][npm-image]][npm-url] | 聚合安装包；代码入口导出 `Dever` |
+| [`@deot/env-cli`](./packages/cli) | [![npm][npm-cli-image]][npm-cli-url] | 提供 `dec dev` 与 `dec build` |
+| [`@deot/env-deps`](./packages/deps) | [![npm][npm-deps-image]][npm-deps-url] | 聚合 `@deot/dev` 开发工具链 |
+| [`@deot/env-dever`](./packages/dever) | [![npm][npm-dever-image]][npm-dever-url] | 解析 workspace，创建 Vite 服务与应用构建 |
+| [`@deot/env-shared`](./packages/shared) | [![npm][npm-shared-image]][npm-shared-url] | 提供 workspace 元数据与日志工具 |
+| [`@deot/env-vue`](./packages/vue) | [![npm][npm-vue-image]][npm-vue-url] | 生成 Vue、JSX、文件路由和布局插件配置 |
 
-## Contributing
+## 文档
 
-这是一个[monorepo](https://en.wikipedia.org/wiki/Monorepo)仓库 ，使用[pnpm](https://pnpm.io/) 管理
+- [快速开始](./docs/getting-started.md)：安装、命令、最小 workspace 与单仓库模式。
+- [项目结构](./docs/project-structure.md)：多应用、shared、入口模板、页面和布局约定。
+- [配置扩展](./docs/configuration.md)：Vite 配置优先级、环境数据、alias、样式和代码检查。
+- [构建与部署](./docs/build-and-deploy.md)：独立构建、合并构建、静态资源与分环境部署。
+- [CLI](./packages/cli/README.md)：命令和参数。
+- [Dever](./packages/dever/README.md)：开发与构建运行时。
+- [Vue 集成](./packages/vue/README.md)：自动路由与布局目录。
 
-- 安装环境
+## 本仓库开发
 
-```console
-$ npm run init
+```bash
+pnpm install
+
+# 启动文档站
+npm run docs:dev
+
+# 测试、类型检查与构建
+npm run test
+npm run typecheck
+npm run build
+
+# 代码检查
+npm run lint
 ```
 
-- 添加依赖或添加新的包
+## 相关项目
 
-```console
-$ npm run add
-```
+- [env-demo](https://github.com/deot/env-demo)
+- [site](https://github.com/deot/site)
 
-- 关联
+## 贡献
 
-```console
-$ npm run link
-```
-
-- 测试
-
-```console
-$ npm run test
-
-# 或者 直接添加参数
-$ npm run test -- --package-name '**' --watch
-```
-
-- 开发
-
-```console
-$ npm run dev
-
-# 或者 直接添加参数
-$ npm run dev -- --package-name '**'
-```
-
-- 打包
-
-```console
-$ npm run build
-```
-
-- 代码检查
-
-```console
-$ npm run lint
-```
-
-- 发布
-
-```console
-$ npm run release
-```
-
-## 关联
-
-[CONTRIBUTING](./.github/CONTRIBUTING.md)
-
-[LICENSE (MIT)](./LICENSE)
+- [贡献指南](./.github/CONTRIBUTING.md)
+- License: MIT

@@ -12,6 +12,7 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:style": "stylelint --fix '**/*.{css,scss}' --cache --cache-location node_modules/.cache/stylelint/",
     "link": "ddc link",
+    "docs:dev": "doc dev --workspace .",
     "dev": "npm run test",
     "update": "ddc update",
     "build": "ddc build",
@@ -36,12 +37,13 @@
     "url": "git+https://github.com/deot/env.git"
   },
   "author": "deot",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/deot/env/issues"
   },
   "homepage": "https://github.com/deot/env#readme",
   "devDependencies": {
-    "@deot/dev": "^2.9.15"
+    "@deot/dev": "^2.9.15",
+    "@deot/docs": "^1.0.9"
   }
 }

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>@deot/env 文档</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@deot/docs-client/dist/index.style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@deot/docs-renderer/dist/index.style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@deot/docs-markdown/dist/index.style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@deot/docs-playground/dist/index.style.css">
+</head>
+<body>
+	<div id="app"></div>
+	<script>
+		const repositoryRaw = 'https://raw.githubusercontent.com/deot/env/refs/heads/main/';
+		const repositoryBlob = 'https://github.com/deot/env/blob/main/';
+		const locales = {
+			'zh-CN': { label: '简体中文' },
+			'en-US': { label: 'English' }
+		};
+		const packages = [
+			{ label: '@deot/env', value: 'index' },
+			{ label: '@deot/env-cli', value: 'cli' },
+			{ label: '@deot/env-deps', value: 'deps' },
+			{ label: '@deot/env-dever', value: 'dever' },
+			{ label: '@deot/env-shared', value: 'shared' },
+			{ label: '@deot/env-vue', value: 'vue' }
+		];
+		const guides = [
+			{
+				label: { 'zh-CN': '介绍', 'en-US': 'Introduction' },
+				value: 'guide-introduction',
+				source: 'README.md',
+				route: '/guide/introduction'
+			},
+			{
+				label: { 'zh-CN': '快速开始', 'en-US': 'Getting Started' },
+				value: 'guide-getting-started',
+				source: 'docs/getting-started.md',
+				route: '/guide/getting-started'
+			},
+			{
+				label: { 'zh-CN': '项目结构', 'en-US': 'Project Structure' },
+				value: 'guide-project-structure',
+				source: 'docs/project-structure.md',
+				route: '/guide/project-structure'
+			},
+			{
+				label: { 'zh-CN': '配置说明', 'en-US': 'Configuration' },
+				value: 'guide-configuration',
+				source: 'docs/configuration.md',
+				route: '/guide/configuration'
+			},
+			{
+				label: { 'zh-CN': '构建与部署', 'en-US': 'Build and Deploy' },
+				value: 'guide-build-and-deploy',
+				source: 'docs/build-and-deploy.md',
+				route: '/guide/build-and-deploy'
+			}
+		];
+		const packageDocuments = packages.map(item => ({
+			...item,
+			value: `package-${item.value}`,
+			source: `packages/${item.value}/README.md`,
+			route: `/packages/${item.value}`
+		}));
+		const documents = [...guides, ...packageDocuments];
+		const readmes = Object.fromEntries(documents.map(item => [item.value, item.source]));
+		const readmeRoutes = Object.fromEntries(documents.flatMap(({ source, route }) => {
+			return source.endsWith('/README.md')
+				? [[source, route], [source.slice(0, -'/README.md'.length), route]]
+				: [[source, route]];
+		}));
+		const localeReadmes = Object.fromEntries(Object.keys(locales).map(lang => [lang, readmes]));
+		const sidebars = Object.fromEntries(Object.keys(locales).map(lang => [
+			lang,
+			[
+				{
+					label: guides[0].label[lang],
+					value: guides[0].route
+				},
+				{
+					label: lang === 'zh-CN' ? '指南' : 'Guide',
+					children: guides.slice(1).map(item => ({
+						label: item.label[lang],
+						value: item.route
+					}))
+				},
+				{
+					label: lang === 'zh-CN' ? '包' : 'Packages',
+					children: packageDocuments.map(item => ({
+						label: item.label,
+						value: item.route
+					}))
+				}
+			]
+		]));
+
+		const createHomeDocument = (lang) => {
+			const t = (zh, en) => (lang === 'zh-CN' ? zh : en);
+			const accent = '#2563eb';
+			const accentSecondary = '#14b8a6';
+			const accents = [accent, accentSecondary, '#8b5cf6'];
+			const action = (label, to, variant = 'solid') => ({
+				label,
+				to: `/${lang}${to}`,
+				variant,
+				size: 'large',
+				color: accent,
+				textColor: variant === 'solid' ? '#ffffff' : accent
+			});
+			const stack = {
+				marginTop: 0,
+				marginBottom: 80,
+				paddingTop: 0,
+				paddingBottom: 0,
+				maxWidth: 1200
+			};
+			const block = (id, type, props, appearance = stack) => ({
+				id,
+				module: { type, version: 1, props },
+				appearance
+			});
+			const cards = items => items.map((item, index) => ({
+				...item,
+				accent: item.accent || accents[index]
+			}));
+
+			return {
+				schemaVersion: 2,
+				meta: { id: `env-home-${lang}`, title: '@deot/env' },
+				layout: {
+					mode: 'sortable',
+					maxWidth: 1920,
+					minHeight: 600,
+					background: '#ffffff'
+				},
+				blocks: [
+					block('home-hero', 'hero', {
+						eyebrow: '@deot/env',
+						title: t('统一项目开发环境与构建流程', 'One development environment for every project'),
+						description: t(
+							'通过统一命令、Vite 开发服务和共享配置管理单仓库或多应用 workspace。',
+							'Use shared commands, Vite services and configuration across single repositories or multi-app workspaces.'
+						),
+						align: 'left',
+						accent,
+						accentSecondary,
+						background: '',
+						showVisual: true,
+						minHeight: 500,
+						highlights: [
+							{ value: 'dec', label: t('统一命令', 'Unified CLI') },
+							{ value: 'Vite', label: t('开发与构建', 'Dev and build') },
+							{ value: 'Single / Monorepo', label: t('项目架构', 'Project layouts') }
+						],
+						actions: [
+							action(t('开始使用', 'Get Started'), '/guide/getting-started'),
+							action(t('查看 CLI', 'Explore the CLI'), '/packages/cli', 'outline')
+						]
+					}, { ...stack, marginBottom: 64, fullWidth: true }),
+					block('home-features', 'features', {
+						eyebrow: t('开发架构', 'Architecture'),
+						title: t('同一套约定支撑多个应用', 'One convention for multiple applications'),
+						description: t(
+							'从命令入口、开发服务到 Vue 集成，保持项目结构和依赖版本一致。',
+							'Keep commands, development services, Vue integration and dependency versions aligned.'
+						),
+						columns: 3,
+						gap: 24,
+						items: cards([
+							{
+								title: t('统一命令', 'Unified commands'),
+								description: t('使用 dec 统一启动开发服务和构建应用。', 'Use dec to start development services and build applications.'),
+								badge: 'CLI',
+								icon: 'filter'
+							},
+							{
+								title: t('多应用 workspace', 'Multi-app workspaces'),
+								description: t('在一个 workspace 中组织多个应用，并按包独立开发和构建。', 'Organize several apps in one workspace and develop or build each package independently.'),
+								badge: 'Monorepo',
+								icon: 'grid'
+							},
+							{
+								title: t('共享开发能力', 'Shared development layer'),
+								description: t('复用公共配置、预加载入口和 Vue 构建能力。', 'Reuse common configuration, preload entry points and Vue build support.'),
+								badge: 'Shared',
+								icon: 'link'
+							}
+						])
+					}),
+					block('home-steps', 'steps', {
+						eyebrow: t('开始使用', 'Start'),
+						title: t('三步运行多应用项目', 'Run a multi-app project in three steps'),
+						columns: 3,
+						items: cards([
+							{ title: t('安装', 'Install'), description: 'pnpm add -D @deot/env', icon: '01' },
+							{ title: t('开发', 'Develop'), description: 'dec dev --workspace src', icon: '02' },
+							{ title: t('构建', 'Build'), description: 'dec build --workspace src --out-dir dist', icon: '03' }
+						])
+					}),
+					block('home-cta', 'cta', {
+						eyebrow: t('文档', 'Documentation'),
+						title: t('了解命令、开发服务与集成包', 'Explore commands, services and integrations'),
+						description: t('阅读项目结构、配置、构建流程和各子包 API。', 'Read about project structure, configuration, build flows and package APIs.'),
+						align: 'center',
+						accent,
+						accentSecondary,
+						background: '',
+						actions: [
+							action(t('阅读项目结构', 'Explore the architecture'), '/guide/project-structure'),
+							action(t('浏览全部包', 'Browse packages'), '/packages/index', 'outline')
+						]
+					}, { ...stack, marginBottom: 0, fullWidth: true })
+				]
+			};
+		};
+
+		const pathSegments = location.pathname.split('/');
+		const localeIndex = pathSegments.findIndex(segment => Boolean(locales[segment]));
+		const basePath = localeIndex >= 0
+			? `${pathSegments.slice(0, localeIndex).join('/')}/`
+			: location.pathname.endsWith('/')
+				? location.pathname
+				: new URL('./', location.href).pathname;
+
+		window.$docs = {
+			base: new URL(basePath, location.origin).href,
+			namespace: '@deot/env-site',
+			repository: 'https://github.com/deot/env',
+			theme: { default: 'system' },
+			locales,
+			routes: Object.fromEntries([
+				['/', {
+					content: {
+						'zh-CN': createHomeDocument('zh-CN'),
+						'en-US': createHomeDocument('en-US')
+					}
+				}],
+				...documents.map(item => [item.route, {
+					value: item.value,
+					content: 'default',
+					sidebar: sidebars,
+					header: 'default',
+					footer: 'default',
+					extra: null
+				}]),
+				['*', '/guide/getting-started']
+			]),
+			resolve: {
+				markdown: ({ lang, value }) => (
+					localeReadmes[lang] || localeReadmes['zh-CN']
+				)[value],
+				resource: ({ source, runtime }) => {
+					if (
+						source === 'README.md'
+						|| /^docs\/[^/]+\.md$/.test(source)
+						|| /^packages\/[^/]+\/README\.md$/.test(source)
+					) {
+						return runtime.mode === 'development'
+							? `/${source}`
+							: new URL(source, repositoryRaw).href;
+					}
+					return undefined;
+				},
+				link: ({ href, lang, source }) => {
+					const logicalOrigin = 'https://docs.local';
+					let target;
+					try {
+						target = new URL(href, new URL(source, `${logicalOrigin}/`));
+					} catch {
+						return undefined;
+					}
+					if (target.origin !== logicalOrigin) return undefined;
+					const path = target.pathname.replace(/^\//, '');
+					const route = readmeRoutes[path];
+					if (route) return `/${lang}${route}${target.search}${target.hash}`;
+					return `${new URL(path, repositoryBlob).href}${target.search}${target.hash}`;
+				}
+			}
+		};
+	</script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@deot/docs-client/+esm"></script>
+</body>
+</html>
