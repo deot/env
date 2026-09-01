@@ -32,6 +32,7 @@ export default (options: Options): Plugin => {
 				}
 
 				if (isPath) {
+					res.setHeader('Content-Type', 'text/html; charset=utf-8');
 					res.end(await server.transformIndexHtml(url, generateVirtualHtml(root, url, options.packageFolderName), req.originalUrl));
 					return;
 				};
