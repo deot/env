@@ -75,22 +75,39 @@ export default (options: Options, packageFolderName?: string): PluginOption => {
 	 * build 时每个包各跑一次独立的 createBuild，只需要当前包 + shared + 兜底三个实例。
 	 * 不能只建当前包：`shared/` 里的裸 import 需要 shared 实例。
 	 */
-	const targets = packageFolderName && knownEntries.includes(packageFolderName)
-		? [...new Set([packageFolderName, sharedName].filter(name => knownEntries.includes(name)))]
-		: [...knownEntries];
-	targets.push(FALLBACK_UNO_ENTRY);
+	const targets = [...new Set([
+		...(packageFolderName && knownEntries.includes(packageFolderName)
+			? [packageFolderName, sharedName].filter(name => knownEntries.includes(name))
+			: knownEntries),
+		// 包目录真叫 `__root__` 时不能建出两个同 virtualModulePrefix 的实例
+		FALLBACK_UNO_ENTRY
+	])];
 
 	/*
 	 * 多个实例会抢注同一个 `/__unocss` 路由，所以只能有一个开 inspector。
 	 */
 	const inspect = process.env.UNOCSS_INSPECT;
-	const inspectEntry = inspect === 'off' || inspect === 'false' ? undefined : inspect || targets[0];
+	const inspectOff = inspect === 'off' || inspect === 'false';
+	if (inspect && !inspectOff && !targets.includes(inspect)) {
+		console.warn(
+			`[uno] UNOCSS_INSPECT="${inspect}" 不是当前进程里的入口（${targets.join(' / ')}），`
+			+ `UnoCSS devtools 未启用`
+		);
+	}
+	const inspectEntry = inspectOff ? undefined : inspect || targets[0];
 
 	const instances: UnoInstance[] = [];
 	const created = targets.map((entry) => {
 		const config: VitePluginConfig = {
 			// 不设 false 的话，`loadConfig` 的 `Object.assign(defaults, inline, fileConfig)` 会让 uno.config.* 反过来覆盖
 			configFile: false,
+			/*
+			 * `configFile: false` 会让 `loadConfig` 走早退分支直接返回 inline 对象，
+			 * 官方 `createContext` 传的 defaults（含 envMode）根本不会被合并进来。
+			 * 不显式补上的话 core 会退到 `envMode: 'build'`，
+			 * 连带 `details: config.details ?? config.envMode === 'dev'` 变成 false，inspector 少一层信息。
+			 */
+			envMode: options.build ? 'build' : 'dev',
 			virtualModulePrefix: unoPrefixForEntry(entry),
 			content: { pipeline: { include: [pipelineIncludeForEntry(entry, root, sharedName, knownEntries)] } },
 			presets: [presetStyle(mergeUnoOptions({}, envOptions))],

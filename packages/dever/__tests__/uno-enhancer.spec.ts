@@ -8,6 +8,7 @@ import {
 	mergeUnoOptions,
 	parseUnoEnvOptions,
 	parseUnoQueryOptions,
+	parseVirtualUnoId,
 	pipelineIncludeForEntry,
 	unoOptionsSignature,
 	unoPrefixForEntry,
@@ -76,6 +77,24 @@ describe('uno-enhancer', () => {
 		expect(parseUnoQueryOptions('virtual:uno.css?dark=media')).toMatchObject({ options: { dark: 'media' } });
 	});
 
+	it('parseVirtualUnoId matches every official alias form', () => {
+		expect(parseVirtualUnoId('uno.css')).toMatchObject({ layer: undefined, warnings: [] });
+		expect(parseVirtualUnoId('virtual:uno.css')).toMatchObject({ layer: undefined });
+		expect(parseVirtualUnoId('uno.css?unit=rem')).toMatchObject({ layer: undefined });
+		expect(parseVirtualUnoId('\0virtual:uno.css?entry=mobile')).toMatchObject({ layer: undefined });
+		expect(parseVirtualUnoId('uno:preflights.css')).toMatchObject({ layer: 'preflights' });
+		expect(parseVirtualUnoId('virtual:uno:preflights.css')).toMatchObject({ layer: 'preflights' });
+		expect(parseVirtualUnoId('/@id/virtual:uno:shortcuts.css')).toMatchObject({ layer: 'shortcuts' });
+
+		expect(parseVirtualUnoId('virtual:other.css')).toBeUndefined();
+		expect(parseVirtualUnoId('unocss.css')).toBeUndefined();
+
+		// layer 会被拼进虚拟模块路径，含 `/` 会破坏官方 RESOLVED_ID_RE 的 `[/\\]` 锚点
+		const evil = parseVirtualUnoId('virtual:uno:../evil.css');
+		expect(evil?.layer).toBeUndefined();
+		expect(evil?.warnings[0]).toContain('layer');
+	});
+
 	it('parseUnoQueryOptions warns on bad values and unknown params', () => {
 		const scale = parseUnoQueryOptions('virtual:uno.css?scale=abc');
 		expect(scale.options).toEqual({});
@@ -91,6 +110,12 @@ describe('uno-enhancer', () => {
 
 		const unknown = parseUnoQueryOptions('virtual:uno.css?foo=1');
 		expect(unknown.warnings[0]).toContain('未知参数');
+
+		// `?unit=` 收下空串会生成无单位的声明
+		const empty = parseUnoQueryOptions('virtual:uno.css?unit=');
+		expect(empty.options).toEqual({});
+		expect(empty.hasOptions).toBe(false);
+		expect(empty.warnings[0]).toContain('unit');
 
 		// Vite 自己挂的 query 不算未知参数
 		expect(parseUnoQueryOptions('virtual:uno.css?unit=rem&t=123&import').warnings).toEqual([]);
@@ -237,13 +262,81 @@ describe('uno-enhancer', () => {
 		expect(warnings.some(i => i.includes('UNOCSS_OPTIONS') && i.includes('unit'))).toBe(true);
 	});
 
-	it('router falls back when the requested entry has no instance', async () => {
-		const { instances } = createInstances([FALLBACK_UNO_ENTRY]);
+	it('router falls back when the requested entry has no instance, keeping the config', async () => {
+		const { instances, reloads } = createInstances([FALLBACK_UNO_ENTRY]);
 		const plugin = createRouter({ root: ROOT, knownEntries: ['mobile'], instances, envOptions: {} });
-		const { context, resolved } = createStub([FALLBACK_UNO_ENTRY]);
+		const { context, resolved, warnings } = createStub([FALLBACK_UNO_ENTRY]);
 
-		expect(await runResolveId(plugin, context, 'virtual:uno.css?entry=typo')).toBe('/__uno-__root__.css');
-		expect(resolved).toEqual(['/__uno-typo.css', '/__uno-__root__.css']);
+		expect(await runResolveId(plugin, context, 'virtual:uno.css?entry=typo&unit=rem'))
+			.toBe('/__uno-__root__.css');
+		// 入口先回退再绑定，配置不能跟着丢
+		expect(reloads).toEqual([FALLBACK_UNO_ENTRY]);
+		expect(instances[0].config.presets).not.toEqual(['default']);
+		// 只解析一次，不再先试一次不存在的入口
+		expect(resolved).toEqual(['/__uno-__root__.css']);
+		expect(warnings.some(i => i.includes('typo'))).toBe(true);
+	});
+
+	it('router falls back through inference before the root entry', async () => {
+		const { instances, reloads } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context, warnings } = createStub();
+
+		/*
+		 * 兜底实例的 pipeline.include 排除了各包目录，直接跳到 __root__ 会让
+		 * importer 自己的 class 一个都不在生成结果里，所以先试 importer 目录。
+		 */
+		expect(await runResolveId(plugin, context, 'virtual:uno.css?entry=typo&unit=rem', '/app/src/mobile/index.js'))
+			.toBe('/__uno-mobile.css');
+		expect(reloads).toEqual(['mobile']);
+		expect(warnings.some(i => i.includes('typo') && i.includes('mobile'))).toBe(true);
+	});
+
+	it('router treats every official uno.css alias the same', async () => {
+		const { instances } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context } = createStub();
+		const from = '/app/src/mobile/index.js';
+
+		// 官方 VIRTUAL_ENTRY_ALIAS 的 `virtual:` 前缀可省，只认 virtual:uno.css
+		// 会让这些写法绕过 router 被第一个实例抢走
+		expect(await runResolveId(plugin, context, 'uno.css', from)).toBe('/__uno-mobile.css');
+		expect(await runResolveId(plugin, context, 'virtual:uno.css', from)).toBe('/__uno-mobile.css');
+		expect(await runResolveId(plugin, context, 'uno.css?entry=manage')).toBe('/__uno-manage.css');
+	});
+
+	it('router keeps the layer segment when routing', async () => {
+		const { instances } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		// 官方 resolved id 形式是 `${prefix}_${layer}.css`
+		const { context, warnings } = createStub(['mobile_preflights', FALLBACK_UNO_ENTRY]);
+		const from = '/app/src/mobile/index.js';
+
+		expect(await runResolveId(plugin, context, 'virtual:uno:preflights.css', from))
+			.toBe('/__uno-mobile_preflights.css');
+		expect(await runResolveId(plugin, context, 'uno:preflights.css', from))
+			.toBe('/__uno-mobile_preflights.css');
+
+		// layer 名会被拼进路径，含 `/` 会破坏官方 RESOLVED_ID_RE 的锚点
+		await runResolveId(plugin, context, 'virtual:uno:../evil.css', from);
+		expect(warnings.some(i => i.includes('layer'))).toBe(true);
+	});
+
+	it('router rebinds when the same file edits its own query', async () => {
+		const { instances, reloads } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context } = createStub();
+		const from = '/app/src/mobile/index.js';
+
+		await runResolveId(plugin, context, 'virtual:uno.css?scale=2', from);
+		// HMR 会重新解析该模块的每一行 import —— 改自己的 query 不是冲突
+		await runResolveId(plugin, context, 'virtual:uno.css?scale=3', from);
+		expect(reloads).toEqual(['mobile', 'mobile']);
+
+		// 换成另一个文件写不同配置，仍然是冲突
+		await expect(
+			runResolveId(plugin, context, 'virtual:uno.css?scale=4', '/app/src/mobile/other.js')
+		).rejects.toThrow(/mobile/);
 	});
 
 	it('UnoEnhancer mounts one instance per package dir plus the fallback', () => {
@@ -260,6 +353,18 @@ describe('uno-enhancer', () => {
 		const plugins = UnoEnhancer({ workspace: 'packages' }, 'dever') as Plugin[];
 		expect((plugins[0] as Plugin).name).toBe('vite-plugin-uno-entry-router');
 		expect(plugins.length).toBe(4); // router + dever + shared + __root__
+	});
+
+	it('UnoEnhancer sets envMode explicitly', () => {
+		/*
+		 * `configFile: false` 会让官方 loadConfig 走早退分支，
+		 * createContext 传的 defaults（含 envMode）不会被合并，必须自己补。
+		 */
+		const dev = UnoEnhancer({ workspace: 'packages' }, 'dever') as Plugin[];
+		const api = (dev.flat() as Plugin[]).find(i => i.name === 'unocss:api')?.api as {
+			getContext: () => { getConfig: () => Promise<{ envMode?: string }> };
+		};
+		return expect(api.getContext().getConfig()).resolves.toMatchObject({ envMode: 'dev' });
 	});
 
 	it('parseUnoEnvOptions / mergeUnoOptions', () => {

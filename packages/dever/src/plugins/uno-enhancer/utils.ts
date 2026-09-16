@@ -57,9 +57,47 @@ export const normalizeUnoId = (id: string) => {
 };
 
 /*
- * 是否为 `virtual:uno.css`（可带任意 query）。
+ * 与官方 `VIRTUAL_ENTRY_ALIAS` 对齐：`virtual:` 前缀可省，`uno` 后面可以跟 layer 名。
+ * `uno.css`、`virtual:uno.css`、`uno:preflights.css`、`virtual:uno:preflights.css` 都算。
+ *
+ * 只认 `virtual:uno.css` 的话，其余写法会绕过 router 直接被插件数组里
+ * 第一个实例认领（官方 alias 同样匹配它们），入口归属和配置都会静默出错。
+ *
+ * query 已由 `normalizeUnoId` 剥掉，所以这里不带官方那段 `(\?.*)?`。
  */
-export const isVirtualUnoId = (id: string) => normalizeUnoId(id).pathname === VIRTUAL_UNO_ID;
+const UNO_ALIAS_RE = /^(?:virtual:)?uno(?::(.+))?\.css$/;
+/*
+ * layer 名会被拼进虚拟模块路径（官方形式是 `${prefix}_${layer}.css`），
+ * 含 `/` 会破坏官方 `RESOLVED_ID_RE` 的 `[/\\]` 锚点，所以要限定字符集。
+ */
+const LAYER_NAME_RE = /^[\w-]+$/;
+
+export interface VirtualUnoId {
+	/* 未指定 layer 时为 undefined；非法 layer 会记一条 warning 并按未指定处理 */
+	layer?: string;
+	warnings: string[];
+}
+
+/*
+ * 解析各种 `uno.css` 写法，拿到 layer 段。不是 UnoCSS 虚拟模块则返回 undefined。
+ */
+export const parseVirtualUnoId = (id: string): VirtualUnoId | undefined => {
+	const matched = normalizeUnoId(id).pathname.match(UNO_ALIAS_RE);
+	if (!matched) return;
+
+	const layer = matched[1];
+	if (layer && !LAYER_NAME_RE.test(layer)) {
+		return {
+			warnings: [`layer 名 ${JSON.stringify(layer)} 只允许 ${LAYER_NAME_RE.source}，已按无 layer 处理`]
+		};
+	}
+	return { layer, warnings: [] };
+};
+
+/*
+ * 是否为 UnoCSS 虚拟模块（各种写法、可带任意 query）。
+ */
+export const isVirtualUnoId = (id: string) => !!parseVirtualUnoId(id);
 
 /*
  * `PresetStyleOptions` 里能用 query 表达的参数。
@@ -107,7 +145,9 @@ export const parseUnoQueryOptions = (id: string): UnoQueryResult => {
 		}
 
 		if (STRING_OPTION_KEYS.includes(key)) {
-			options[key] = value;
+			// `?unit=` 收下空串会生成无单位的声明（`margin:20`）
+			if (value) options[key] = value;
+			else warnings.push(`${key} 不能为空，已忽略`);
 			continue;
 		}
 

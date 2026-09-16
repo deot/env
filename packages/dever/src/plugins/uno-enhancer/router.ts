@@ -4,9 +4,9 @@ import type { VitePluginConfig } from 'unocss/vite';
 import { presetStyle } from '@deot/style-unocss';
 import {
 	inferUnoEntry,
-	isVirtualUnoId,
 	mergeUnoOptions,
 	parseUnoQueryOptions,
+	parseVirtualUnoId,
 	unoOptionsSignature,
 	unoPrefixForEntry,
 	FALLBACK_UNO_ENTRY,
@@ -87,8 +87,12 @@ export default (options: {
 	};
 
 	/*
-	 * 首次带配置的 import 决定该实例的配置，之后不再变。
-	 * 同一个包里出现第二套不同配置属于配置冲突，直接抛错 —— 静默取首次会产出极难诊断的 CSS。
+	 * 首次带配置的 import 决定该实例的配置。
+	 * 两个不同文件给同一个包配了不同选项属于配置冲突，直接抛错 —— 静默取首次会产出极难诊断的 CSS。
+	 *
+	 * 但同一个文件改了自己的 query 是正常编辑：HMR 会重新解析该模块的每一行 import，
+	 * 此时 signature 变了却不是冲突，按「更新」重新绑定。
+	 * （query 被整个删掉时 `hasOptions` 为 false，这里收不到通知，实例会留着旧配置 —— 需要重启。）
 	 */
 	const bind = (instance: UnoInstance, queryOptions: UnoEntryOptions, importer: string) => {
 		const signature = unoOptionsSignature(queryOptions);
@@ -96,12 +100,14 @@ export default (options: {
 
 		if (previous) {
 			if (previous.signature === signature) return previous.done;
-			throw new Error(
-				`入口 "${instance.entry}" 被配置了两套不同的 UnoCSS 选项：\n`
-				+ `  ${previous.importer}\n`
-				+ `  ${importer}\n`
-				+ `同一个包内只能有一处 virtual:uno.css 配置 query`
-			);
+			if (previous.importer !== importer) {
+				throw new Error(
+					`入口 "${instance.entry}" 被配置了两套不同的 UnoCSS 选项：\n`
+					+ `  ${previous.importer}\n`
+					+ `  ${importer}\n`
+					+ `同一个包内只能有一处 virtual:uno.css 配置 query`
+				);
+			}
 		}
 
 		const done = (async () => {
@@ -109,6 +115,7 @@ export default (options: {
 			const ctx = instance.getContext();
 			await ctx.ready;
 			instance.config.presets = [presetStyle(mergeUnoOptions(queryOptions, envOptions))];
+			// reloadConfig 会 tokens.clear() 并用新配置重新提取已缓存模块，与官方处理配置文件变更同路径
 			await ctx.reloadConfig();
 		})();
 
@@ -130,36 +137,55 @@ export default (options: {
 			clearWarnTimer();
 		},
 		async resolveId(id, importer) {
-			if (!isVirtualUnoId(id)) return;
+			const virtual = parseVirtualUnoId(id);
+			if (!virtual) return;
 			resolvedAny = true;
 			clearWarnTimer();
 
+			const source = importer || id;
 			const query = parseUnoQueryOptions(id);
-			for (const warning of query.warnings) {
-				const key = `${importer || id}|${warning}`;
-				if (warned.has(key)) continue;
+			const warnOnce = (key: string, message: string) => {
+				if (warned.has(key)) return;
 				warned.add(key);
-				this.warn(`[${importer || id}] ${warning}`);
+				this.warn(message);
+			};
+
+			for (const warning of [...virtual.warnings, ...query.warnings]) {
+				warnOnce(`${source}|${warning}`, `[${source}] ${warning}`);
 			}
 
-			const entry = query.entry
-				|| inferUnoEntry(importer, root, knownEntries)
-				|| FALLBACK_UNO_ENTRY;
+			/*
+			 * 先把最终入口定下来再绑定配置 —— 否则 `?entry=typo&unit=rem` 会在回退时
+			 * 把 `unit=rem` 一起丢掉。
+			 *
+			 * `?entry=` 指的包不存在时按同一条链继续往下找（importer 目录 → 兜底），
+			 * 而不是直接跳到 `__root__`：兜底实例的 `pipeline.include` 排除了各包目录，
+			 * 直接跳过去会让 importer 自己的 class 一个都不在生成结果里。
+			 */
+			const inferred = inferUnoEntry(importer, root, knownEntries);
+			let entry = query.entry || inferred || FALLBACK_UNO_ENTRY;
+			if (!byEntry.has(entry)) {
+				const next = (inferred && byEntry.has(inferred)) ? inferred : FALLBACK_UNO_ENTRY;
+				warnOnce(
+					`missing-instance|${entry}`,
+					`入口 "${entry}" 没有对应的 UnoCSS 实例，已回退到 ${next}`
+				);
+				entry = next;
+			}
 			const instance = byEntry.get(entry);
 
 			if (query.hasOptions && instance) {
 				const overridden = Object.keys(query.options).filter(key => key in envOptions);
-				const key = `${entry}|${overridden.join(',')}`;
-				if (overridden.length && !warned.has(key)) {
-					warned.add(key);
-					this.warn(
+				if (overridden.length) {
+					warnOnce(
+						`env-override|${entry}|${overridden.join(',')}`,
 						`UNOCSS_OPTIONS 覆盖了入口 "${entry}" query 里的 ${overridden.join(' / ')}，`
 						+ `多入口差异会被抹平`
 					);
 				}
 				// bind 的冲突错误交给 this.error，让 Vite 在 dev overlay 里显示
 				try {
-					await bind(instance, query.options, importer || id);
+					await bind(instance, query.options, source);
 				} catch (error) {
 					return this.error(error instanceof Error ? error.message : String(error));
 				}
@@ -172,13 +198,16 @@ export default (options: {
 			 *
 			 * 也不能带 query：官方 `resolveLayer` 用的 `RESOLVED_ID_RE` 不含 `(\?.*)?`，
 			 * 带 query 会导致 resolveId 阶段登记不上、load 阶段却又能匹配。
+			 *
+			 * layer 形式沿用官方的 `${prefix}_${layer}.css`。
 			 */
-			const resolved = await this.resolve(`/${unoPrefixForEntry(entry)}.css`, importer, { skipSelf: true });
-			if (resolved) return resolved.id;
-
-			if (entry === FALLBACK_UNO_ENTRY) return;
-			this.warn(`入口 "${entry}" 没有对应的 UnoCSS 实例，已回退到 ${FALLBACK_UNO_ENTRY}`);
-			return (await this.resolve(`/${unoPrefixForEntry(FALLBACK_UNO_ENTRY)}.css`, importer, { skipSelf: true }))?.id;
+			const suffix = virtual.layer ? `_${virtual.layer}` : '';
+			const resolved = await this.resolve(
+				`/${unoPrefixForEntry(entry)}${suffix}.css`,
+				importer,
+				{ skipSelf: true }
+			);
+			return resolved?.id;
 		}
 	};
 };

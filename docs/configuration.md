@@ -164,13 +164,24 @@ import 'virtual:uno.css'; // src/shared/examples/index.js，默认配置
 
 **入口列表以磁盘为准**：`src/` 下的每个包目录各对应一个 UnoCSS 实例，外加一个兜底入口 `__root__`。没写 query 的包用默认 `presetStyle()`，也仍然有自己的独立实例。
 
-**配置写在 query 上**，作用域是整个包——`src/mobile/` 下任意一个文件写了 query，配置的就是 mobile 这个包。因此**同一个包里只能有一处配置 query**，出现第二套不同配置会直接报错（静默取首次会产出极难诊断的 CSS）。同一套配置重复写不算冲突。
+**配置写在 query 上**，作用域是整个包——`src/mobile/` 下任意一个文件写了 query，配置的就是 mobile 这个包。因此**同一个包里只能有一处配置 query**，两个不同文件给同一个包配了不同选项会直接报错（静默取首次会产出极难诊断的 CSS）。同一套配置重复写不算冲突；同一个文件改自己的 query 算编辑，会重新绑定并热更新。
+
+> 把 query **整个删掉或清空**检测不到（没有配置参数就等于没表态），实例会留着上一次绑定的配置，需要重启 dev server。
+
+`virtual:` 前缀可以省略，也支持官方的 layer 写法，四种形式等价地受支持：
+
+```js
+import 'uno.css?unit=rem&scale=2';
+import 'virtual:uno.css?unit=rem&scale=2';
+import 'uno:preflights.css';
+import 'virtual:uno:preflights.css';
+```
 
 query 支持的参数（对应 `PresetStyleOptions`，会按类型转换）：
 
 | 参数 | 类型 |
 | --- | --- |
-| `prefix`、`unit` | 字符串 |
+| `prefix`、`unit` | 字符串，空值会被忽略并告警 |
 | `scale` | 数字，非有限数字会被忽略并告警 |
 | `reset`、`variants`、`attributifyPseudo`、`arbitraryVariants` | 布尔，`?reset` 这种无值写法按 `true` |
 | `dark` | 只支持 `class` / `media`（对象形式 query 表达不了） |

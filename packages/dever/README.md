@@ -172,7 +172,11 @@ autoprefixer({ remove: false })
 
 否则给每个包目录各挂一个官方 `unocss/vite` 实例，靠 `virtualModulePrefix`（虚拟模块变成 `/__uno-<entry>.css`）与 `content.pipeline.include`（只提取本包 + `shared` 的源码）彼此隔离；自研的 `vite-plugin-uno-entry-router` 负责选实例并绑定配置（`?entry=` 优先，其次按 importer 目录推断，兜底 `__root__`）。
 
-配置写在 import query 上：`import 'virtual:uno.css?unit=rem&scale=2'`，作用域是整个包，同一个包里出现第二套不同配置会报错。query 参数按 `PresetStyleOptions` 白名单做类型转换（`scale` 转数字、`reset` 等转布尔），未知或格式不对的参数告警并忽略。
+配置写在 import query 上：`import 'virtual:uno.css?unit=rem&scale=2'`，作用域是整个包。两个不同文件给同一个包配了不同选项会报错；同一个文件改自己的 query 算编辑，会重新绑定。把 query 整个删掉检测不到，需要重启。
+
+router 认全部官方 alias 写法——`uno.css`、`virtual:uno.css`、`uno:<layer>.css`、`virtual:uno:<layer>.css`（`virtual:` 前缀在官方正则里本就是可选的，只认一种会让其余写法绕过 router 被第一个实例抢走）。layer 段按官方形式拼成 `/__uno-<entry>_<layer>.css`。
+
+query 参数按 `PresetStyleOptions` 白名单做类型转换（`scale` 转数字、`reset` 等转布尔），未知、空值或格式不对的参数告警并忽略。
 
 配置只能在首次 `resolveId` 时绑定——Vite 的插件数组在 `asyncFlatten` 之后就冻结了，实例必须先建好，而 query 要到 `resolveId` 才可见。`UNOCSS_OPTIONS` 仍是全局覆盖，盖掉 query 里的同名参数时会告警。`UNOCSS_INSPECT=<包名>` 指定哪个实例挂 `/__unocss`（默认第一个，`off` 全关）。
 
