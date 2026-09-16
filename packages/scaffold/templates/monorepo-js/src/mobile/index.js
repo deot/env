@@ -1,5 +1,5 @@
 import './styles/index.scss';
-import 'virtual:uno.css?entry=mobile';
+import 'virtual:uno.css?unit=rem&scale=2';
 
 import { Device } from '@deot/helper-device';
 import { createAppContext } from '@/shared';

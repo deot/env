@@ -41,7 +41,9 @@ $block: v-wfm;
 
 通用布局和原子样式优先使用 `@deot/style-unocss` 已集成的 `g-*` 类，页面自身的语义样式再使用上述 BEM Block。
 
-多应用入口可用 `import 'virtual:uno.css?entry=mobile'` 显式选择配置，也可以只写 `virtual:uno.css`，由文件所在目录匹配 `vite.config.js` 注入的 `UNOCSS_ENTRIES`。mobile 使用 rem / scale 2，manage 和 shared 使用 px。不要依赖 `UNOCSS_OPTIONS` 按 URL 切换，它只适合全局覆盖。
+每个包的 UnoCSS 配置写在 import query 上：`src/mobile/index.js` 是 `import 'virtual:uno.css?unit=rem&scale=2'`，`src/manage/index.js` 是 `?unit=px&scale=1`，`src/shared/examples/index.js` 只写 `virtual:uno.css` 用默认配置。`vite.config.js` 里不需要配置。
+
+query 的作用域是整个包，所以**一个包里只能有一处配置 query**，写第二套不同的会直接报错。不要依赖 `UNOCSS_OPTIONS` 按 URL 切换，它是全局覆盖，会把各端差异抹平。
 
 UnoCSS 没有运行时动态生成样式的能力。只有源码中已经出现的完整 class token 才会在构建时生成并注入对应 CSS；运行时可以切换这些已生成的 class，但不要使用 `` `g-fs-${size}` `` 这类无法被静态扫描的拼接方式。
 

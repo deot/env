@@ -1,5 +1,5 @@
 import './styles/index.scss';
-import 'virtual:uno.css?entry=manage';
+import 'virtual:uno.css?unit=px&scale=1';
 
 import { createAppContext } from '@/shared';
 import { base, routes } from './router';

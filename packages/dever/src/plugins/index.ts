@@ -9,7 +9,7 @@ export default (options: Options, packageFolderName?: string) => {
 	const baseConfig = defineConfig({
 		plugins: [
 			virtualHtml(options),
-			UnoEnhancer(options)
+			UnoEnhancer(options, packageFolderName)
 		]
 	});
 	return mergeConfig(vueConfig, baseConfig);

@@ -168,11 +168,13 @@ autoprefixer({ remove: false })
 
 ## UnoCSS
 
-`UnoEnhancer`：项目根存在 `uno.config.ts` / `uno.config.js` 时只挂官方 `unocss/vite`。
+`UnoEnhancer`：项目根或 workspace 目录存在 `uno.config.*` / `unocss.config.*` 时只挂官方 `unocss/vite`，并把该文件的绝对路径喂给它（官方自己的搜索根是 workspace 目录，放项目根它找不到）。
 
-否则按 `UNOCSS_ENTRIES` 给每个入口各挂一个官方 `unocss/vite` 实例，靠 `virtualModulePrefix`（虚拟模块变成 `/__uno-<entry>.css`）与 `content.pipeline.include`（只提取本入口 + `shared` 的源码）彼此隔离；自研的 `vite-plugin-uno-entry-router` 只负责把 `virtual:uno.css` 路由到对应实例（`?entry=` 优先，其次按 importer 目录推断，兜底 `__root__`）。
+否则给每个包目录各挂一个官方 `unocss/vite` 实例，靠 `virtualModulePrefix`（虚拟模块变成 `/__uno-<entry>.css`）与 `content.pipeline.include`（只提取本包 + `shared` 的源码）彼此隔离；自研的 `vite-plugin-uno-entry-router` 负责选实例并绑定配置（`?entry=` 优先，其次按 importer 目录推断，兜底 `__root__`）。
 
-`UNOCSS_ENTRIES` 由 `vite.config.js` 注入，工厂阶段还拿不到，所以 `UnoEnhancer` 返回惰性 thenable，等 Vite 加载完用户配置、装配插件时才求值。没有 entries 时只挂一个实例、用默认 `presetStyle()`。`UNOCSS_OPTIONS` 只做全局覆盖。
+配置写在 import query 上：`import 'virtual:uno.css?unit=rem&scale=2'`，作用域是整个包，同一个包里出现第二套不同配置会报错。query 参数按 `PresetStyleOptions` 白名单做类型转换（`scale` 转数字、`reset` 等转布尔），未知或格式不对的参数告警并忽略。
+
+配置只能在首次 `resolveId` 时绑定——Vite 的插件数组在 `asyncFlatten` 之后就冻结了，实例必须先建好，而 query 要到 `resolveId` 才可见。`UNOCSS_OPTIONS` 仍是全局覆盖，盖掉 query 里的同名参数时会告警。`UNOCSS_INSPECT=<包名>` 指定哪个实例挂 `/__unocss`（默认第一个，`off` 全关）。
 
 ## 虚拟 HTML
 

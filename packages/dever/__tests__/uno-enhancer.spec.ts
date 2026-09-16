@@ -1,34 +1,58 @@
-import type { Plugin, PluginOption } from 'vite';
+import type { Plugin } from 'vite';
+import { Locals } from '@deot/env-shared';
 
 import UnoEnhancer from '../src/plugins/uno-enhancer';
-import createRouter from '../src/plugins/uno-enhancer/router';
+import createRouter, { type UnoInstance } from '../src/plugins/uno-enhancer/router';
 import {
 	inferUnoEntry,
 	mergeUnoOptions,
-	parseUnoEntries,
-	parseUnoEntry,
 	parseUnoEnvOptions,
+	parseUnoQueryOptions,
 	pipelineIncludeForEntry,
+	unoOptionsSignature,
 	unoPrefixForEntry,
 	FALLBACK_UNO_ENTRY
 } from '../src/plugins/uno-enhancer/utils';
 
 const ROOT = '/app/src';
+const KNOWN = ['mobile', 'manage', 'shared'];
 
 /*
- * router 只用到 `this.resolve`，这里给一个最小的桩：
- * 把「存在哪些官方实例」建模成一组已知的虚拟模块 id。
+ * router 只用到 `this.resolve` / `this.warn` / `this.error`，这里给一个最小的桩。
+ * 「存在哪些官方实例」建模成一组已知的虚拟模块 id。
  */
-const createResolveStub = (known: string[]) => {
-	const calls: string[] = [];
+const createStub = (known: string[] = KNOWN.concat(FALLBACK_UNO_ENTRY)) => {
+	const resolved: string[] = [];
+	const warnings: string[] = [];
+	const ids = known.map(i => `/${unoPrefixForEntry(i)}.css`);
 	const context = {
-		warn: () => {},
+		warn: (message: string) => warnings.push(message),
+		error: (message: string) => { throw new Error(message); },
 		resolve: (id: string) => {
-			calls.push(id);
-			return known.includes(id) ? { id } : null;
+			resolved.push(id);
+			return ids.includes(id) ? { id } : null;
 		}
 	};
-	return { context, calls };
+	return { context, resolved, warnings };
+};
+
+/*
+ * 模拟官方实例：记录 reloadConfig 被调用的次数，以及调用时 config.presets 是否已被换掉。
+ */
+const createInstances = (entries: string[]) => {
+	const reloads: string[] = [];
+	const instances: UnoInstance[] = entries.map((entry) => {
+		const config = { presets: ['default'] } as never as UnoInstance['config'];
+		return {
+			entry,
+			config,
+			getContext: () => ({
+				ready: Promise.resolve(),
+				reloadConfig: async () => { reloads.push(entry); }
+			})
+		} as never as UnoInstance;
+	});
+	return { instances, reloads };
 };
 
 const runResolveId = (plugin: Plugin, context: unknown, id: string, importer?: string) => {
@@ -38,22 +62,71 @@ const runResolveId = (plugin: Plugin, context: unknown, id: string, importer?: s
 
 // @vitest-environment node
 describe('uno-enhancer', () => {
-	it('parseUnoEntry', () => {
-		expect(parseUnoEntry('virtual:uno.css')).toBeUndefined();
-		expect(parseUnoEntry('virtual:uno.css?entry=mobile')).toBe('mobile');
-		expect(parseUnoEntry('\0virtual:uno.css?entry=manage')).toBe('manage');
-		expect(parseUnoEntry('/@id/virtual:uno.css?entry=shared')).toBe('shared');
-		expect(parseUnoEntry('virtual:uno.css?entry=mobile&t=1')).toBe('mobile');
-		expect(parseUnoEntry('virtual:uno.css?entry=bad/name')).toBeUndefined();
+	it('parseUnoQueryOptions converts types instead of passing strings through', () => {
+		// scale 直接透传会变成 '2'，presetStyle 要的是有限数字
+		expect(parseUnoQueryOptions('virtual:uno.css?unit=rem&scale=2')).toMatchObject({
+			options: { unit: 'rem', scale: 2 },
+			hasOptions: true,
+			warnings: []
+		});
+		expect(parseUnoQueryOptions('virtual:uno.css?reset=false&variants=true'))
+			.toMatchObject({ options: { reset: false, variants: true } });
+		// 无值写法按 true
+		expect(parseUnoQueryOptions('virtual:uno.css?reset')).toMatchObject({ options: { reset: true } });
+		expect(parseUnoQueryOptions('virtual:uno.css?dark=media')).toMatchObject({ options: { dark: 'media' } });
 	});
 
-	it('inferUnoEntry uses importer folder when it matches entries', () => {
-		const entries = { mobile: {}, manage: {}, shared: {} };
-		expect(inferUnoEntry('/app/src/shared/examples/index.js', ROOT, entries)).toBe('shared');
-		expect(inferUnoEntry('/app/src/mobile/index.js', ROOT, entries)).toBe('mobile');
-		expect(inferUnoEntry('/app/src/unknown/index.js', ROOT, entries)).toBeUndefined();
-		expect(inferUnoEntry(undefined, ROOT, entries)).toBeUndefined();
-		expect(inferUnoEntry('/app/src/shared/examples/index.js', ROOT, {})).toBeUndefined();
+	it('parseUnoQueryOptions warns on bad values and unknown params', () => {
+		const scale = parseUnoQueryOptions('virtual:uno.css?scale=abc');
+		expect(scale.options).toEqual({});
+		expect(scale.warnings[0]).toContain('scale');
+
+		const dark = parseUnoQueryOptions('virtual:uno.css?dark=whatever');
+		expect(dark.options).toEqual({});
+		expect(dark.warnings[0]).toContain('dark');
+
+		const reset = parseUnoQueryOptions('virtual:uno.css?reset=maybe');
+		expect(reset.options).toEqual({});
+		expect(reset.warnings[0]).toContain('reset');
+
+		const unknown = parseUnoQueryOptions('virtual:uno.css?foo=1');
+		expect(unknown.warnings[0]).toContain('未知参数');
+
+		// Vite 自己挂的 query 不算未知参数
+		expect(parseUnoQueryOptions('virtual:uno.css?unit=rem&t=123&import').warnings).toEqual([]);
+	});
+
+	it('parseUnoQueryOptions handles entry selection', () => {
+		expect(parseUnoQueryOptions('virtual:uno.css?entry=mobile')).toMatchObject({
+			entry: 'mobile',
+			hasOptions: false
+		});
+		expect(parseUnoQueryOptions('\0virtual:uno.css?entry=manage&unit=px')).toMatchObject({
+			entry: 'manage',
+			options: { unit: 'px' }
+		});
+		expect(parseUnoQueryOptions('/@id/virtual:uno.css?entry=shared')).toMatchObject({ entry: 'shared' });
+
+		// 非法入口名不再静默按 importer 推断
+		const bad = parseUnoQueryOptions('virtual:uno.css?entry=bad/name');
+		expect(bad.entry).toBeUndefined();
+		expect(bad.warnings[0]).toContain('entry');
+
+		expect(parseUnoQueryOptions('virtual:uno.css')).toMatchObject({ hasOptions: false, warnings: [] });
+	});
+
+	it('unoOptionsSignature ignores key order', () => {
+		expect(unoOptionsSignature({ unit: 'rem', scale: 2 }))
+			.toBe(unoOptionsSignature({ scale: 2, unit: 'rem' }));
+		expect(unoOptionsSignature({ unit: 'rem' })).not.toBe(unoOptionsSignature({ unit: 'px' }));
+	});
+
+	it('inferUnoEntry uses importer folder when it matches a package dir', () => {
+		expect(inferUnoEntry('/app/src/shared/examples/index.js', ROOT, KNOWN)).toBe('shared');
+		expect(inferUnoEntry('/app/src/mobile/index.js', ROOT, KNOWN)).toBe('mobile');
+		expect(inferUnoEntry('/app/src/unknown/index.js', ROOT, KNOWN)).toBeUndefined();
+		expect(inferUnoEntry(undefined, ROOT, KNOWN)).toBeUndefined();
+		expect(inferUnoEntry('/app/src/shared/examples/index.js', ROOT, [])).toBeUndefined();
 	});
 
 	it('unoPrefixForEntry keeps entries from swallowing each other', () => {
@@ -71,35 +144,46 @@ describe('uno-enhancer', () => {
 	});
 
 	it('pipelineIncludeForEntry scopes files to the entry (plus shared)', () => {
-		const mobile = pipelineIncludeForEntry('mobile', ROOT, 'shared');
+		const mobile = pipelineIncludeForEntry('mobile', ROOT, 'shared', KNOWN);
 
 		expect(mobile.test('/app/src/mobile/index.js')).toBe(true);
 		expect(mobile.test('/app/src/mobile/views/a.vue')).toBe(true);
 		// Vue SFC 子请求带 query，glob 匹配不到，所以这里必须是 RegExp
 		expect(mobile.test('/app/src/mobile/views/a.vue?vue&type=template')).toBe(true);
 		expect(mobile.test('/app/src/shared/utils/index.ts')).toBe(true);
-		expect(mobile.test('/app/src/shared/index.html')).toBe(true);
 
 		expect(mobile.test('/app/src/manage/index.js')).toBe(false);
 		expect(mobile.test('/app/src/mobile/styles/a.scss')).toBe(false);
 		expect(mobile.test('/other/src/mobile/index.js')).toBe(false);
 
 		// shared 自己不再额外带上 shared
-		const shared = pipelineIncludeForEntry('shared', ROOT, 'shared');
+		const shared = pipelineIncludeForEntry('shared', ROOT, 'shared', KNOWN);
 		expect(shared.test('/app/src/shared/index.js')).toBe(true);
 		expect(shared.test('/app/src/mobile/index.js')).toBe(false);
+	});
 
-		// 兜底入口收下 root 里的所有源码
-		const root = pipelineIncludeForEntry(FALLBACK_UNO_ENTRY, ROOT, 'shared');
-		expect(root.test('/app/src/mobile/index.js')).toBe(true);
-		expect(root.test('/app/src/whatever/a.vue')).toBe(true);
-		expect(root.test('/other/src/a.vue')).toBe(false);
+	it('pipelineIncludeForEntry narrows the fallback entry to leftovers', () => {
+		const fallback = pipelineIncludeForEntry(FALLBACK_UNO_ENTRY, ROOT, 'shared', KNOWN);
+
+		// 不属于任何包目录的文件，以及 shared
+		expect(fallback.test('/app/src/preload.js')).toBe(true);
+		expect(fallback.test('/app/src/shared/box.js')).toBe(true);
+		expect(fallback.test('/app/src/other/a.vue')).toBe(true);
+
+		// 各包自己的文件不该再被兜底实例提取一遍
+		expect(fallback.test('/app/src/mobile/a.vue')).toBe(false);
+		expect(fallback.test('/app/src/manage/a.vue')).toBe(false);
+		expect(fallback.test('/other/src/a.vue')).toBe(false);
+
+		// 没有已知入口时退化成整个 root
+		const bare = pipelineIncludeForEntry(FALLBACK_UNO_ENTRY, ROOT, 'shared', []);
+		expect(bare.test('/app/src/mobile/a.vue')).toBe(true);
 	});
 
 	it('router resolves virtual uno css to the matching instance', async () => {
-		const plugin = createRouter({ root: ROOT, entries: { mobile: {}, manage: {}, shared: {} } });
-		const known = ['mobile', 'manage', 'shared', FALLBACK_UNO_ENTRY].map(i => `/${unoPrefixForEntry(i)}.css`);
-		const { context } = createResolveStub(known);
+		const { instances } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context } = createStub();
 
 		expect(await runResolveId(plugin, context, 'virtual:uno.css?entry=mobile')).toBe('/__uno-mobile.css');
 		expect(await runResolveId(plugin, context, 'virtual:uno.css', '/app/src/shared/examples/index.js'))
@@ -110,58 +194,78 @@ describe('uno-enhancer', () => {
 		expect(await runResolveId(plugin, context, 'virtual:other.css')).toBeUndefined();
 	});
 
+	it('router binds query options to the instance exactly once', async () => {
+		const { instances, reloads } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context } = createStub();
+
+		await runResolveId(plugin, context, 'virtual:uno.css?unit=rem&scale=2', '/app/src/mobile/index.js');
+		expect(reloads).toEqual(['mobile']);
+		expect(instances[0].config.presets).not.toEqual(['default']);
+
+		// 同一套配置重复出现（含 HMR 重新解析）不算冲突，也不重复 reload
+		await runResolveId(plugin, context, 'virtual:uno.css?scale=2&unit=rem', '/app/src/mobile/views/a.vue');
+		expect(reloads).toEqual(['mobile']);
+
+		// 裸 import 不表达配置，不触发绑定
+		await runResolveId(plugin, context, 'virtual:uno.css', '/app/src/manage/index.js');
+		expect(reloads).toEqual(['mobile']);
+	});
+
+	it('router errors when one package declares two different configs', async () => {
+		const { instances } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({ root: ROOT, knownEntries: KNOWN, instances, envOptions: {} });
+		const { context } = createStub();
+
+		await runResolveId(plugin, context, 'virtual:uno.css?unit=rem', '/app/src/mobile/index.js');
+		await expect(
+			runResolveId(plugin, context, 'virtual:uno.css?unit=px', '/app/src/mobile/other.js')
+		).rejects.toThrow(/mobile/);
+	});
+
+	it('router warns when UNOCSS_OPTIONS overrides query options', async () => {
+		const { instances } = createInstances(KNOWN.concat(FALLBACK_UNO_ENTRY));
+		const plugin = createRouter({
+			root: ROOT,
+			knownEntries: KNOWN,
+			instances,
+			envOptions: { unit: 'px' }
+		});
+		const { context, warnings } = createStub();
+
+		await runResolveId(plugin, context, 'virtual:uno.css?unit=rem&scale=2', '/app/src/mobile/index.js');
+		expect(warnings.some(i => i.includes('UNOCSS_OPTIONS') && i.includes('unit'))).toBe(true);
+	});
+
 	it('router falls back when the requested entry has no instance', async () => {
-		const plugin = createRouter({ root: ROOT, entries: { mobile: {} } });
-		const { context, calls } = createResolveStub([`/${unoPrefixForEntry(FALLBACK_UNO_ENTRY)}.css`]);
+		const { instances } = createInstances([FALLBACK_UNO_ENTRY]);
+		const plugin = createRouter({ root: ROOT, knownEntries: ['mobile'], instances, envOptions: {} });
+		const { context, resolved } = createStub([FALLBACK_UNO_ENTRY]);
 
 		expect(await runResolveId(plugin, context, 'virtual:uno.css?entry=typo')).toBe('/__uno-__root__.css');
-		expect(calls).toEqual(['/__uno-typo.css', '/__uno-__root__.css']);
+		expect(resolved).toEqual(['/__uno-typo.css', '/__uno-__root__.css']);
 	});
 
-	it('UnoEnhancer defers reading UNOCSS_ENTRIES until vite flattens plugins', async () => {
-		const prev = process.env.UNOCSS_ENTRIES;
-		delete process.env.UNOCSS_ENTRIES;
-		try {
-			// 工厂阶段还没读 env —— vite.config.js 要到 loadConfigFromFile 之后才执行
-			const deferred = UnoEnhancer({ workspace: 'packages' });
-			process.env.UNOCSS_ENTRIES = JSON.stringify({
-				mobile: { unit: 'rem', scale: 2 },
-				manage: { unit: 'px', scale: 1 }
-			});
+	it('UnoEnhancer mounts one instance per package dir plus the fallback', () => {
+		const locals = Locals.impl('packages');
+		const known = [...locals.packageFolderNames, locals.sharedPackageFolderName].filter(Boolean);
 
-			const plugins = (await deferred) as PluginOption[];
-			expect(Array.isArray(plugins)).toBe(true);
-			expect((plugins[0] as Plugin).name).toBe('vite-plugin-uno-entry-router');
-			// mobile + manage + __root__
-			expect(plugins.length).toBe(4);
-		} finally {
-			if (prev === undefined) delete process.env.UNOCSS_ENTRIES;
-			else process.env.UNOCSS_ENTRIES = prev;
-		}
+		const plugins = UnoEnhancer({ workspace: 'packages' }) as Plugin[];
+		expect((plugins[0] as Plugin).name).toBe('vite-plugin-uno-entry-router');
+		expect(plugins.length).toBe(known.length + 2); // router + 每个包 + __root__
 	});
 
-	it('UnoEnhancer mounts a single official instance without UNOCSS_ENTRIES', async () => {
-		const prev = process.env.UNOCSS_ENTRIES;
-		delete process.env.UNOCSS_ENTRIES;
-		try {
-			const plugins = (await UnoEnhancer({ workspace: 'packages' })) as Plugin[];
-			expect(plugins.some(i => i.name === 'vite-plugin-uno-entry-router')).toBe(false);
-			expect(plugins.some(i => i.name.startsWith('unocss:'))).toBe(true);
-		} finally {
-			if (prev === undefined) delete process.env.UNOCSS_ENTRIES;
-			else process.env.UNOCSS_ENTRIES = prev;
-		}
+	it('UnoEnhancer only builds the current package when given one', () => {
+		// build 时每个包各跑一次独立的 createBuild，不需要其它包的实例
+		const plugins = UnoEnhancer({ workspace: 'packages' }, 'dever') as Plugin[];
+		expect((plugins[0] as Plugin).name).toBe('vite-plugin-uno-entry-router');
+		expect(plugins.length).toBe(4); // router + dever + shared + __root__
 	});
 
-	it('parseUnoEnvOptions / parseUnoEntries / mergeUnoOptions', () => {
+	it('parseUnoEnvOptions / mergeUnoOptions', () => {
 		expect(parseUnoEnvOptions(undefined)).toEqual({});
 		expect(parseUnoEnvOptions('{')).toEqual({});
 		expect(parseUnoEnvOptions('{"scale":2}')).toEqual({ scale: 2 });
-		expect(parseUnoEntries(undefined)).toEqual({});
-		expect(parseUnoEntries('{')).toEqual({});
-		expect(parseUnoEntries('{"mobile":{"unit":"rem"}}')).toEqual({
-			mobile: { unit: 'rem' }
-		});
 		expect(mergeUnoOptions({ unit: 'rem', scale: 2 }, { scale: 1 })).toEqual({
 			unit: 'rem',
 			scale: 1

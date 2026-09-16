@@ -44,17 +44,14 @@ describe('scaffold', () => {
 				expect.arrayContaining(['manage', 'mobile', 'shared'])
 			);
 			expect(await readFile(resolve(targetDir, 'src/mobile/index.js'), 'utf8'))
-				.toContain('virtual:uno.css?entry=mobile');
+				.toContain('virtual:uno.css?unit=rem&scale=2');
 			expect(await readFile(resolve(targetDir, 'src/manage/index.js'), 'utf8'))
-				.toContain('virtual:uno.css?entry=manage');
+				.toContain('virtual:uno.css?unit=px&scale=1');
 			expect(await readFile(resolve(targetDir, 'src/shared/examples/index.js'), 'utf8'))
 				.toContain('virtual:uno.css');
+			// 配置已移到 import query，vite.config 不再注入 env
 			expect(await readFile(resolve(targetDir, 'vite.config.js'), 'utf8'))
-				.toContain('UNOCSS_ENTRIES');
-			expect(await readFile(resolve(targetDir, 'vite.config.js'), 'utf8'))
-				.toContain('unit: \'rem\'');
-			expect(await readFile(resolve(targetDir, 'vite.config.js'), 'utf8'))
-				.toContain('scale: 2');
+				.not.toContain('UNOCSS_ENTRIES');
 		}
 
 		const extension = language === 'ts' ? 'ts' : 'js';
@@ -212,15 +209,13 @@ describe('scaffold', () => {
 			language: 'js'
 		});
 		expect(await readFile(resolve(targetDir, 'src/mobile/index.js'), 'utf8'))
-			.toContain('virtual:uno.css?entry=mobile');
+			.toContain('virtual:uno.css?unit=rem&scale=2');
 		expect(await readFile(resolve(targetDir, 'src/manage/index.js'), 'utf8'))
-			.toContain('virtual:uno.css?entry=manage');
+			.toContain('virtual:uno.css?unit=px&scale=1');
 		expect(await readFile(resolve(targetDir, 'src/shared/examples/index.js'), 'utf8'))
 			.toContain('virtual:uno.css');
 		const viteConfig = await readFile(resolve(targetDir, 'vite.config.js'), 'utf8');
-		expect(viteConfig).toContain('UNOCSS_ENTRIES');
-		expect(viteConfig).toContain('unit: \'rem\'');
-		expect(viteConfig).toContain('scale: 2');
+		expect(viteConfig).not.toContain('UNOCSS_ENTRIES');
 	});
 
 	it('rejects an existing target', async () => {
