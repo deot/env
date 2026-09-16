@@ -1,0 +1,40 @@
+@use '@deot/style/src/functions/helper' as fh;
+@use "@deot/style/src/variables/theme" with (
+	$theme: (
+		color-default: #1D2129,
+		color-highlight: #456cf6,
+		color-info: #3491FA,	
+		color-success: #00B42A,
+		color-error: #F53F3F,
+		color-warning: #FADC19,
+		color-disabled: #8f939c,
+		color-primary: #456cf6,
+
+		// 背景颜色
+		background-color-default: #F8F8F8,
+		background-color-highlight: #2D7FFF,
+
+		// 圆角
+		border-radius-default: fh.unitfix(8),
+		border-shadow-default: 0 0 fh.unitfix(8) 0 rgba(0, 0, 0, 0.1),
+		border-shadow-default-top: 0 fh.unitfix(-2) fh.unitfix(10) 0 rgba(0, 0, 0, 0.08),
+
+		// 行高
+		line-height-default: 1.5,
+		line-height-limit: fh.unitfix(32), // 限高
+
+		// 边框
+		border-color-default: #F2F3F5,
+
+		// 字体尺寸
+		font-size-default: fh.unitfix(13),
+		font-size-large: fh.unitfix(16),
+
+		// 滚动条
+		scrollbar-track-bg-color: rgba(0, 0, 0, 0),
+		scrollbar-thumb-bg-color: rgba(0, 0, 0, 0.2),
+		scrollbar-track-box-shadow: inset 0 0 fh.unitfix(10) rgba(0, 0, 0, 0)
+	)
+);
+
+

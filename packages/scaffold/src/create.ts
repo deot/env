@@ -21,7 +21,9 @@ export interface CreateScaffoldOptions {
 
 export const templates: TemplateMetadata[] = [
 	{ type: 'monorepo', language: 'js', label: 'Monorepo / JavaScript' },
-	{ type: 'monorepo', language: 'ts', label: 'Monorepo / TypeScript' }
+	{ type: 'monorepo', language: 'ts', label: 'Monorepo / TypeScript' },
+	{ type: 'single', language: 'js', label: 'Single / JavaScript' },
+	{ type: 'single', language: 'ts', label: 'Single / TypeScript' }
 ];
 
 const TEMPLATE_TYPES: TemplateType[] = ['single', 'monorepo'];

@@ -1,0 +1,10 @@
+/**
+ * @file 全局样式的命名以g-开头
+ * @deot/style-unocss 可以动态引入g-的样式，本文件负责额外补充;
+ */
+
+// .g-xxx-xxx {}
+
+.g-disabled {
+	cursor: not-allowed;
+}

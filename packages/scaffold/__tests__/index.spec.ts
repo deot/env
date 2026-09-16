@@ -181,18 +181,28 @@ describe('scaffold', () => {
 			const globalStyles = await readFile(resolve(targetDir, 'src/styles/index.scss'), 'utf8');
 			const homePage = await readFile(resolve(targetDir, 'src/pages/home/main/index.vue'), 'utf8');
 			expect(defaultLayout).toContain('useLayoutDefaultTabsStore');
-			expect(defaultLayout).toContain('grid-template-columns: max-content minmax(0, 1fr)');
-			expect(app).toContain('createAppContext');
-			expect(layout).toContain('/workspace/features/main');
+			expect(defaultLayout).toContain('$block: c-ld;');
+			expect(defaultLayout).toContain('@include element(display)');
+			// 单应用不再有 createAppContext，入口直接组装 app / router / Context
+			expect(app).not.toContain('createAppContext');
+			expect(app).toContain('createApp(');
+			expect(app).toContain('Context.add(\'router\', router)');
+			expect(app).toContain('virtual:uno.css?unit=px&scale=1');
+			expect(layout).toContain('/workspace/features/feedback');
 			expect(layout).toContain('/state/manage/scroll');
 			expect(layout).not.toContain('/home/main');
 			expect(router).toContain('vue-router/auto-routes');
 			expect(router).toContain('setupLayouts(autoRoutes)');
 			expect(projectConfig).toContain('"@/*": ["./*"]');
-			expect(globalStyles).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
+			expect(globalStyles).toContain('@use "./theme";');
+			expect(globalStyles).toContain('@use "@deot/style/src/outputs/theme"');
 			expect(homePage).toContain('useFirstRoute(\'default\', !LAYOUT_HOME_VISIBLE)');
 			expect(homePage).toContain('@/src/');
 			expect(homePage).not.toContain('@/shared');
+			expect(await readdir(resolve(targetDir, 'src/components/layouts'))).toEqual(
+				expect.arrayContaining(['default.vue', 'default-mobile.vue', 'none.vue'])
+			);
+			expect(await readdir(resolve(targetDir, 'src'))).not.toContain('mobile');
 			expect(await readdir(resolve(targetDir, 'src/pages'))).toEqual(
 				expect.arrayContaining(['home', 'state', 'workspace'])
 			);
