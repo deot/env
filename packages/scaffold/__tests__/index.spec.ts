@@ -39,22 +39,22 @@ describe('scaffold', () => {
 		expect(rootEntries).toContain('.husky');
 		expect(rootEntries).not.toContain('node_modules');
 		expect(rootEntries).not.toContain('dist');
+		const extension = language === 'ts' ? 'ts' : 'js';
 		if (type === 'monorepo') {
 			expect(await readdir(resolve(targetDir, 'src'))).toEqual(
 				expect.arrayContaining(['manage', 'mobile', 'shared'])
 			);
-			expect(await readFile(resolve(targetDir, 'src/mobile/index.js'), 'utf8'))
+			expect(await readFile(resolve(targetDir, `src/mobile/index.${extension}`), 'utf8'))
 				.toContain('virtual:uno.css?unit=rem&scale=2');
-			expect(await readFile(resolve(targetDir, 'src/manage/index.js'), 'utf8'))
+			expect(await readFile(resolve(targetDir, `src/manage/index.${extension}`), 'utf8'))
 				.toContain('virtual:uno.css?unit=px&scale=1');
-			expect(await readFile(resolve(targetDir, 'src/shared/examples/index.js'), 'utf8'))
+			expect(await readFile(resolve(targetDir, `src/shared/examples/index.${extension}`), 'utf8'))
 				.toContain('virtual:uno.css');
 			// 配置已移到 import query，vite.config 不再注入 env
-			expect(await readFile(resolve(targetDir, 'vite.config.js'), 'utf8'))
+			expect(await readFile(resolve(targetDir, `vite.config.${extension}`), 'utf8'))
 				.not.toContain('UNOCSS_ENTRIES');
 		}
 
-		const extension = language === 'ts' ? 'ts' : 'js';
 		const networkPath = type === 'monorepo'
 			? `src/shared/modules/network.${extension}`
 			: `src/modules/network.${extension}`;
@@ -87,7 +87,7 @@ describe('scaffold', () => {
 				'utf8'
 			);
 			const layoutConstants = await readFile(
-				resolve(targetDir, `src/shared/constants/layout.${extension}`),
+				resolve(targetDir, `src/manage/constants/index.${extension}`),
 				'utf8'
 			);
 			const firstRouteHook = await readFile(
@@ -102,12 +102,8 @@ describe('scaffold', () => {
 				resolve(targetDir, 'src/mobile/pages/escape/main/index.vue'),
 				'utf8'
 			);
-			const unoOnDemandExample = await readFile(
-				resolve(targetDir, 'src/shared/examples/components/style-unocss.vue'),
-				'utf8'
-			);
 			const sharedExampleLayout = await readFile(
-				resolve(targetDir, 'src/shared/examples/layout.js'),
+				resolve(targetDir, `src/shared/examples/layout.${extension}`),
 				'utf8'
 			);
 			const sharedUnoPage = await readFile(
@@ -120,17 +116,17 @@ describe('scaffold', () => {
 			expect(mobileEnv).toContain('MModal');
 			expect(network).toContain('Context.platform');
 			expect(network).not.toContain('from \'@deot/vc\'');
-			expect(defaultLayout).toContain('\'has-border-radius\'');
-			expect(defaultLayout).toContain('background: #e8e9ee');
+			expect(defaultLayout).toContain('@include when(layout, true)');
+			expect(defaultLayout).toContain('background: #E8E9EE');
 			expect(defaultLayout).toContain('<style lang="scss">');
 			expect(defaultLayout).not.toContain('<style scoped');
-			expect(defaultLayout).toContain('$block: c-layout-default;');
+			expect(defaultLayout).toContain('$block: c-ld;');
 			expect(defaultLayout).toContain('@include block($block)');
 			expect(defaultLayout).toContain('@include element(display)');
 			expect(defaultMobileLayout).toContain('class="c-layout-mobile"');
 			expect(layoutSizeStore).toContain('width.value < 1366');
 			expect(layoutSizeStore).toContain('width: 108');
-			expect(layoutSizeStore).toContain(': 220');
+			expect(layoutSizeStore).toContain('? 220 : 0');
 			expect(await readdir(resolve(targetDir, 'src/shared/components/layouts/stores'))).toEqual(
 				expect.arrayContaining([
 					`use-layout-default-scroller.${extension}`,
@@ -141,22 +137,25 @@ describe('scaffold', () => {
 			expect(await readdir(resolve(targetDir, 'src/shared/components/layouts/header'))).toEqual(
 				expect.arrayContaining(['navbar-toggle.vue', 'title-inner.vue'])
 			);
-			const layout = await readFile(resolve(targetDir, `src/manage/layout.${extension}`), 'utf8');
-			expect(layout).toContain('/workspace/features/main');
+			const layout = await readFile(
+				resolve(targetDir, `src/manage/stores/apis/layout.${extension}`),
+				'utf8'
+			);
+			expect(layout).toContain('/workspace/features/feedback');
 			expect(layout).toContain('/state/manage/scroll');
 			expect(layout).not.toContain('/home/main');
 			expect(layout).toContain('/workspace/features');
 			expect(layout).toContain('/state/manage');
 			expect(layoutConstants).toContain('LAYOUT_HOME_VISIBLE = true');
-			expect(firstRouteHook).toContain('findFirstRoute');
+			expect(firstRouteHook).toContain('useFirstRoute');
 			expect(manageEscape).toContain('layout: \'none\'');
 			expect(mobileEscape).toContain('layout: \'none\'');
-			expect(unoOnDemandExample).toContain('large: \'g-fs-32\'');
-			expect(unoOnDemandExample).toContain('large: \'g-m-20\'');
-			expect(unoOnDemandExample).not.toContain('`g-fs-${');
+			expect(sharedUnoPage).toContain('large: \'g-fs-32\'');
+			expect(sharedUnoPage).toContain('large: \'g-m-20\'');
+			expect(sharedUnoPage).not.toContain('`g-fs-${');
 			expect(sharedExampleLayout).toContain('value: \'/style/unocss/on-demand\'');
 			expect(sharedUnoPage).toContain('layout: \'default\'');
-			expect(await readFile(resolve(targetDir, `src/shared/constants/pages.${extension}`), 'utf8'))
+			expect(await readFile(resolve(targetDir, `src/shared/constants/routes.${extension}`), 'utf8'))
 				.toContain('ROUTE_UNAUTHORISED_REGEXP');
 			const homePage = await readFile(
 				resolve(targetDir, 'src/manage/pages/home/main/index.vue'),
