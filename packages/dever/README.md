@@ -166,6 +166,10 @@ autoprefixer({ remove: false })
 
 开发模式不加入生产 PostCSS 插件，但 BEM mixin 检测仍会执行。
 
+## UnoCSS
+
+`UnoEnhancer`：项目根存在 `uno.config.ts` / `uno.config.js` 时只挂官方 `unocss/vite`。否则挂 `createMultipleEntry`，在 `configResolved` 读取 `vite.config.js` 注入的 `UNOCSS_ENTRIES`（工厂阶段还拿不到）。没有 entries 时按 `__root__` 和默认 `presetStyle()` 生成。`UNOCSS_OPTIONS` 只做全局覆盖。
+
 ## 虚拟 HTML
 
 开发服务的 `vite-plugin-virtual-html` 会处理不带文件扩展名的页面请求，同时跳过：

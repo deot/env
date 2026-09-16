@@ -3,6 +3,7 @@ import type { Command } from 'commander';
 import { createRequire } from 'node:module';
 
 import * as Dever from '@deot/env-dever';
+import * as Scaffold from '@deot/env-scaffold';
 
 const require = createRequire(import.meta.url);
 
@@ -34,6 +35,15 @@ program
 program
 	.usage('<cmd>');
 
+// dec init
+program
+	.command('init [name]')
+	.addOption(new Option('-t, --template <type>', 'Select Template').choices(['single', 'monorepo']))
+	.addOption(new Option('-l, --language <language>', 'Select Language').choices(['js', 'ts']))
+	.option('--no-install', 'Skip pnpm install')
+	.description('create a project from a template')
+	.action(Scaffold.run);
+
 // dec dev
 addOptions(
 	program
@@ -58,8 +68,15 @@ addOptions(
 	}
 );
 
-program.parse(process.argv);
+const main = async () => {
+	await program.parseAsync(process.argv);
 
-if (!program.args.length) {
-	program.help();
-}
+	if (!program.args.length) {
+		program.help();
+	}
+};
+
+main().catch((error) => {
+	console.error(error);
+	process.exitCode = 1;
+});

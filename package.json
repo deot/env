@@ -21,7 +21,12 @@
     "release": "ddc release",
     "typecheck": "vue-tsc --noEmit --skipLibCheck",
     "cli:dev": "tsx ./packages/cli/src/index.ts dev",
-    "cli:build": "tsx --tsconfig ./tsconfig.json ./packages/cli/src/index.ts build"
+    "cli:build": "tsx --tsconfig ./tsconfig.json ./packages/cli/src/index.ts build",
+    "scaffold:init": "tsx ./packages/scaffold/scripts/preview.ts init",
+    "scaffold:dev": "tsx ./packages/scaffold/scripts/preview.ts dev",
+    "scaffold:build": "tsx ./packages/scaffold/scripts/preview.ts build",
+    "scaffold:lint": "tsx ./packages/scaffold/scripts/preview.ts lint",
+    "scaffold:typecheck": "tsx ./packages/scaffold/scripts/preview.ts typecheck"
   },
   "scripts-info": {
     "init": "首次安装",
@@ -44,6 +49,6 @@
   "homepage": "https://github.com/deot/env#readme",
   "devDependencies": {
     "@deot/dev": "^2.9.15",
-    "@deot/docs": "^1.0.9"
+    "@deot/docs": "^1.1.3"
   }
 }

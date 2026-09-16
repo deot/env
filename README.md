@@ -10,6 +10,7 @@
 ## 特性
 
 - 使用 `dec dev` 和 `dec build` 统一单仓库与多应用 workspace 的开发、构建入口。
+- 使用 `dec init` 创建 JavaScript 或 TypeScript 的单应用、多应用项目。
 - 根据 workspace 中的 `package.json` 自动建立包名、目录与 Vite alias 映射。
 - 自动发现 Vue 页面与布局，支持应用页面、shared 示例页和多应用路由合并。
 - 缺少应用 `index.html` 时，根据 workspace 根部的 `index.ejs` 和 `index.js/index.ts` 生成入口。
@@ -95,6 +96,9 @@ dec build --workspace src --out-dir dist --package-name manage
 [npm-shared-image]: https://img.shields.io/npm/v/@deot/env-shared
 [npm-shared-url]: https://www.npmjs.com/package/@deot/env-shared
 
+[npm-scaffold-image]: https://img.shields.io/npm/v/@deot/env-scaffold
+[npm-scaffold-url]: https://www.npmjs.com/package/@deot/env-scaffold
+
 [npm-vue-image]: https://img.shields.io/npm/v/@deot/env-vue
 [npm-vue-url]: https://www.npmjs.com/package/@deot/env-vue
 
@@ -108,6 +112,7 @@ dec build --workspace src --out-dir dist --package-name manage
 | [`@deot/env-deps`](./packages/deps) | [![npm][npm-deps-image]][npm-deps-url] | 聚合 `@deot/dev` 开发工具链 |
 | [`@deot/env-dever`](./packages/dever) | [![npm][npm-dever-image]][npm-dever-url] | 解析 workspace，创建 Vite 服务与应用构建 |
 | [`@deot/env-shared`](./packages/shared) | [![npm][npm-shared-image]][npm-shared-url] | 提供 workspace 元数据与日志工具 |
+| [`@deot/env-scaffold`](./packages/scaffold) | [![npm][npm-scaffold-image]][npm-scaffold-url] | 提供 `dec init` 使用的项目生成器与模板 |
 | [`@deot/env-vue`](./packages/vue) | [![npm][npm-vue-image]][npm-vue-url] | 生成 Vue、JSX、文件路由和布局插件配置 |
 
 ## 文档
@@ -119,6 +124,25 @@ dec build --workspace src --out-dir dist --package-name manage
 - [CLI](./packages/cli/README.md)：命令和参数。
 - [Dever](./packages/dever/README.md)：开发与构建运行时。
 - [Vue 集成](./packages/vue/README.md)：自动路由与布局目录。
+
+## Scaffold 实时预览
+
+直接选择并运行 `packages/scaffold/templates` 中的模板源码：
+
+```bash
+npm run scaffold:dev
+```
+
+未声明的模板类型、语言和 monorepo 应用会通过 Prompt 选择，也可以完整指定：
+
+```bash
+npm run scaffold:dev -- \
+	--template monorepo \
+	--language ts \
+	--package-name manage
+```
+
+同一入口还提供 `scaffold:init`、`scaffold:build`、`scaffold:lint` 和 `scaffold:typecheck`。预览直接监听模板目录，源码修改后由 Vite 实时更新；开发服务器地址以终端实际输出为准。
 
 ## 本仓库开发
 

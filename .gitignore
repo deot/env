@@ -60,5 +60,6 @@ user.config.js
 # lock
 yarn.lock
 package-lock.json
+.pnpm-store
 
 typed-router.d.ts

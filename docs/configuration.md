@@ -148,6 +148,30 @@ const packages = __MULTIPLE_PACKAGE_FOLDER_NAMES__.split(',').filter(Boolean);
 
 项目无需重复配置同一段 `additionalData`。若没有安装 `@deot/style`，则只使用基础 CSS 配置。
 
+## UnoCSS 多入口
+
+开发态一个 Vite 进程会同时挂 `/mobile`、`/manage`、`/shared/`，因此不能靠 `process.env.UNOCSS_OPTIONS` 按 URL 切换配置。在 `vite.config.js` 注入 `UNOCSS_ENTRIES`：
+
+```js
+process.env.UNOCSS_ENTRIES = JSON.stringify({
+	mobile: { unit: 'rem', scale: 2 },
+	manage: { unit: 'px', scale: 1 },
+	shared: { unit: 'px', scale: 1 }
+});
+```
+
+业务侧可以显式带 query，也可以只写 `virtual:uno.css`，由 importer 所在目录匹配 `UNOCSS_ENTRIES` 的 key：
+
+```js
+import 'virtual:uno.css?entry=mobile';
+import 'virtual:uno.css?entry=manage';
+import 'virtual:uno.css'; // shared/examples/index.js → shared
+```
+
+项目根若存在 `uno.config.ts` / `uno.config.js`，`UnoEnhancer` 只启用官方 `unocss/vite`。否则挂多入口插件，并在 Vite 加载完用户配置后读取 `UNOCSS_ENTRIES`。没有 entries 时按整个 root 和默认 `presetStyle()` 生成。
+
+无 `?entry=` 时优先按 importer 推断，同样走 `generateCss`；推断不到则扫描整个 root。三端可以在同一个开发服务里同时打开。`UNOCSS_OPTIONS` 只作为全局覆盖（CI 或临时调试）。
+
 ## ESLint、Stylelint 与 TypeScript
 
 `@deot/env` 通过 `@deot/env-deps` 带入 `@deot/dev` 工具链。实际项目可以直接复用配置。

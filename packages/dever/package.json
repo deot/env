@@ -20,6 +20,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@deot/style-unocss": "^1.3.0",
     "@deot/env-shared": "^1.0.7",
     "@deot/env-vue": "^1.0.12",
     "@deot/dev-shared": "^2.9.13",
@@ -34,6 +35,7 @@
     "postcss-import": "^16.1.1",
     "postcss-url": "^10.1.4",
     "sass": "^1.101.3",
+    "unocss": "^66.9.1",
     "vite": "^8.1.5"
   },
   "devDependencies": {}

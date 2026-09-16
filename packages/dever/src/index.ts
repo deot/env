@@ -16,7 +16,7 @@ import type { InlineConfig } from 'vite';
 import { cloneDeep } from 'lodash-es';
 import { build as createBuild, createServer, mergeConfig } from 'vite';
 import createPlugins from './plugins';
-import { generateVirtualHtml } from './utils';
+import { generateVirtualHtml } from './plugins/virtual-html/utils';
 import { getOptions } from './prompt';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -114,7 +114,7 @@ export const run = (options: Options) => Utils.autoCatch(async () => {
 			}
 		},
 		css: (() => {
-			let has = false;
+			let has: boolean;
 			try {
 				// 本地环境和真实环境存在差异，这里待优化
 				// eslint-disable-next-line @stylistic/max-len

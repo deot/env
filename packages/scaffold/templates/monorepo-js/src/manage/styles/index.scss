@@ -1,0 +1,15 @@
+@use "./theme";
+
+// 可覆盖@deot/style-unocss前置生成的主题变量
+@use "@deot/style/src/outputs/theme" as output-theme;
+@use '../../shared/styles/index';
+@use "./global";
+@use "./reset";
+
+// 放下面权重高于他们
+@use "./font";
+
+// font-family: "PingFang SC"; 基准线不居中，不设置
+body {
+
+}

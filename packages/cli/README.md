@@ -1,6 +1,6 @@
 # @deot/env-cli
 
-`@deot/env-cli` 提供 `dec` 命令。当前 CLI 只注册 `dev` 和 `build`，两者都调用 `@deot/env-dever`。
+`@deot/env-cli` 提供 `dec` 命令，包括项目初始化、开发和生产构建。
 
 ## 安装
 
@@ -24,12 +24,40 @@ dec <cmd>
 
 | 命令 | 说明 |
 | --- | --- |
+| `dec init` | 从内置模板创建项目 |
 | `dec dev` | 创建 Vite 开发服务 |
 | `dec build` | 逐包执行 Vite 生产构建 |
 | `dec --version` | 输出当前 CLI 版本 |
 | `dec --help` | 输出帮助 |
 
-当前源码没有注册 `init`、`test`、`add` 等子命令；这些属于 `@deot/dev` 的其他工具，不应写成 `dec` 命令。
+`test`、`add` 等命令属于 `@deot/dev` 的其他工具，不是 `dec` 子命令。
+
+## `dec init`
+
+```bash
+dec init [project-name] [options]
+```
+
+| 选项 | 值 | 说明 |
+| --- | --- | --- |
+| `--template <type>` | `single`、`monorepo` | 项目结构；未传时交互选择 |
+| `--language <language>` | `js`、`ts` | 开发语言；未传时交互选择 |
+| `--no-install` | — | 生成后跳过 `pnpm install` |
+
+交互终端会询问缺少的项目名、结构和语言。生成完成后默认执行 `pnpm install`；交互和非交互环境都可以用 `--no-install` 跳过。非交互环境必须提供项目名、模板和语言。
+
+```bash
+# 交互创建
+dec init my-app
+
+# 非交互创建
+dec init my-app --template monorepo --language ts --no-install
+
+# 尚未安装 @deot/env 时
+pnpm dlx @deot/env-cli init my-app
+```
+
+目标目录必须不存在。`monorepo` 模板包含 `manage`、`mobile` 和 `shared`；四种组合均使用 `@deot/vc`，不依赖远程模板仓库。
 
 ## `dec dev`
 
@@ -111,4 +139,3 @@ CLI 会把命令选项交给 Dever。逐包构建时，Vite 配置可以从 `ENV
 测试传入 `--dry-run` 时，当前实现执行一个 `echo development <runtime-dir>` 子进程，并以其退出码完成命令；它不会解析 workspace、启动服务或写构建产物。
 
 `--dry-run [boolean]` 没有自定义字符串解析器，建议只使用不带值的 `--dry-run`，不要依赖 `--dry-run false` 表示关闭。
-

@@ -11,8 +11,34 @@ pnpm add -D @deot/env
 `@deot/env` 会带入以下核心能力：
 
 - `@deot/env-cli`：提供 `dec` 命令。
+- `@deot/env-scaffold`：提供项目生成器，以及单应用、多应用、JS、TS 项目模板。
 - `@deot/env-dever`：创建 Vite 开发服务和生产构建。
 - `@deot/env-deps`：带入 `@deot/dev` 开发工具链。
+
+## 创建项目
+
+已经安装 `dec` 时可以直接创建：
+
+```bash
+dec init my-app
+```
+
+尚未安装时可以通过 pnpm 临时执行 CLI：
+
+```bash
+pnpm dlx @deot/env-cli init my-app
+```
+
+交互流程会选择 `single` 或 `monorepo`，以及 JavaScript 或 TypeScript。生成完成后默认执行 `pnpm install`；需要跳过时使用：
+
+```bash
+dec init my-app \
+	--template monorepo \
+	--language ts \
+	--no-install
+```
+
+非交互环境必须显式提供项目名、模板和语言，且同样默认安装依赖。目标目录必须不存在，CLI 不会覆盖已有文件，也不会自动执行 `git init`。
 
 ## 多应用 workspace
 
@@ -173,10 +199,21 @@ project/
 ├── index.html
 ├── package.json
 └── src/
-    ├── index.ts
-    ├── pages/
-    └── components/layouts/
+	├── app.ts
+	├── env.ts
+	├── index.ts
+	├── layout.ts
+	├── pages/
+	│   ├── home/main/
+	│   ├── workspace/features/main/
+	│   └── state/manage/scroll/
+	├── components/
+	├── constants/
+	├── hooks/
+	├── modules/
+	├── stores/
+	├── styles/
+	└── utils/
 ```
 
-单仓库模式不会扫描子包，也不会生成 workspace 包名 alias。
-
+Single 模板等价于 Monorepo 模板的 `manage + shared`：`manage` 的应用内容放在 `src/`，`shared` 能力合并到对应的根目录模块。单仓库模式不会扫描子包，也不会生成 workspace 包名 alias；Dever 的 `@` 指向项目根目录，因此源码 alias 使用 `@/src/...`。
