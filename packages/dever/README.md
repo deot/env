@@ -168,7 +168,11 @@ autoprefixer({ remove: false })
 
 ## UnoCSS
 
-`UnoEnhancer`：项目根存在 `uno.config.ts` / `uno.config.js` 时只挂官方 `unocss/vite`。否则挂 `createMultipleEntry`，在 `configResolved` 读取 `vite.config.js` 注入的 `UNOCSS_ENTRIES`（工厂阶段还拿不到）。没有 entries 时按 `__root__` 和默认 `presetStyle()` 生成。`UNOCSS_OPTIONS` 只做全局覆盖。
+`UnoEnhancer`：项目根存在 `uno.config.ts` / `uno.config.js` 时只挂官方 `unocss/vite`。
+
+否则按 `UNOCSS_ENTRIES` 给每个入口各挂一个官方 `unocss/vite` 实例，靠 `virtualModulePrefix`（虚拟模块变成 `/__uno-<entry>.css`）与 `content.pipeline.include`（只提取本入口 + `shared` 的源码）彼此隔离；自研的 `vite-plugin-uno-entry-router` 只负责把 `virtual:uno.css` 路由到对应实例（`?entry=` 优先，其次按 importer 目录推断，兜底 `__root__`）。
+
+`UNOCSS_ENTRIES` 由 `vite.config.js` 注入，工厂阶段还拿不到，所以 `UnoEnhancer` 返回惰性 thenable，等 Vite 加载完用户配置、装配插件时才求值。没有 entries 时只挂一个实例、用默认 `presetStyle()`。`UNOCSS_OPTIONS` 只做全局覆盖。
 
 ## 虚拟 HTML
 

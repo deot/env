@@ -168,9 +168,21 @@ import 'virtual:uno.css?entry=manage';
 import 'virtual:uno.css'; // shared/examples/index.js → shared
 ```
 
-项目根若存在 `uno.config.ts` / `uno.config.js`，`UnoEnhancer` 只启用官方 `unocss/vite`。否则挂多入口插件，并在 Vite 加载完用户配置后读取 `UNOCSS_ENTRIES`。没有 entries 时按整个 root 和默认 `presetStyle()` 生成。
+项目根若存在 `uno.config.ts` / `uno.config.js`，`UnoEnhancer` 只启用官方 `unocss/vite`，不做拆分。
 
-无 `?entry=` 时优先按 importer 推断，同样走 `generateCss`；推断不到则扫描整个 root。三端可以在同一个开发服务里同时打开。`UNOCSS_OPTIONS` 只作为全局覆盖（CI 或临时调试）。
+否则每个入口各挂**一个官方 `unocss/vite` 实例**，用三个公开配置项隔离开，提取、生成、HMR 与 build 产物全部由官方完成：
+
+| 配置项 | 作用 |
+| --- | --- |
+| `virtualModulePrefix` | 该实例的虚拟模块变成 `/__uno-<entry>.css`，实例之间互不认领 |
+| `content.pipeline.include` | 该实例只提取本入口目录（以及 `shared`）下的源码 |
+| `presets` | 本入口自己的 `presetStyle` 选项 |
+
+自研部分只剩一个 `vite-plugin-uno-entry-router`，负责把 `virtual:uno.css` 指向对的那个实例：显式 `?entry=` 优先，其次按 importer 相对 root 的首段目录匹配 `UNOCSS_ENTRIES` 的 key，都对不上则落到兜底入口 `__root__`（收下 root 下所有源码、用默认 `presetStyle()`）。
+
+`UNOCSS_ENTRIES` 是在 `vite.config.js` 里赋值的，插件工厂阶段还读不到。`UnoEnhancer` 因此返回一个惰性 thenable：Vite 先 `loadConfigFromFile`、再 `asyncFlatten(config.plugins)`，工厂正好在这两步之间求值，env 一定已就绪。
+
+没有 `UNOCSS_ENTRIES` 时只挂一个官方实例、用默认 `presetStyle()`。三端可以在同一个开发服务里同时打开。`UNOCSS_OPTIONS` 只作为全局覆盖（CI 或临时调试）。
 
 ## ESLint、Stylelint 与 TypeScript
 

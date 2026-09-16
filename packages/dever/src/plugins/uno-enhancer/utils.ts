@@ -1,13 +1,9 @@
-import fs from 'fs-extra';
 import * as path from 'node:path';
-import { createGenerator } from 'unocss';
-import { presetStyle } from '@deot/style-unocss';
 
-const IGNORE_DIR_RE = /(?:^|[/\\])(?:node_modules|dist|\.git|\.temp)(?:[/\\]|$)/;
 const ENTRY_NAME_RE = /^[\w-]+$/;
+const SOURCE_EXT_RE_SOURCE = '(?:vue|[jt]sx?|html)';
 
 export const VIRTUAL_UNO_ID = 'virtual:uno.css';
-export const SCAN_RE = /\.(?:vue|[jt]sx?|html)$/;
 /*
  * 无法从 `?entry=` / importer 推断时的兜底入口名。
  * 表示扫描整个 root，而不是某一个包目录。
@@ -112,105 +108,42 @@ export const inferUnoEntry = (
 };
 
 /*
- * 无 query 导入对应的内部模块 id。
- * 避免把业务源码改写成 `?entry=`。
+ * 入口对应的官方 `virtualModulePrefix`，让每个 UnoCSS 实例拿到互不重叠的虚拟模块 id。
+ *
+ * 分隔符用 `-` 而不是 `_`：官方按前缀拼出的 `RESOLVED_ID_RE` 是
+ * `[/\\]__uno-a(?:_(.*?))?\.css$`，其中 `(_.*?)` 是 layer 名。
+ * 用 `-` 时入口 `a` 不会误吞 `__uno-a-b.css`（`-b` 匹配不上 `(_.*?)`）；
+ * 若用 `_`，入口 `a` 会把入口 `a_b` 的模块当成自己的 `b` layer。
  */
-export const RESOLVED_UNO_BARE_ID = `\0${VIRTUAL_UNO_ID}`;
-/*
- * 显式 `?entry=` 的内部模块 id，用来拆开不同入口。
- */
-export const resolvedUnoEntryId = (entry: string) => `\0${VIRTUAL_UNO_ID}?entry=${entry}`;
+export const unoPrefixForEntry = (entry: string) => `__uno-${entry}`;
+
+const escapeRe = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /*
- * HMR 时该入口可能同时存在 query 模块和无 query 模块，都要失效。
+ * root 归一成 `/` 分隔后转义，再把分隔符放宽成 `[/\\]`，
+ * 这样 Windows 下 `C:/app/src/...` 与 `C:\app\src\...` 都能命中。
  */
-export const resolvedIdsForEntry = (entry: string, inferred: Map<string, string>) => {
-	const ids = [resolvedUnoEntryId(entry)];
-	for (const [id, name] of inferred) {
-		if (name === entry && !ids.includes(id)) ids.push(id);
-	}
-	return ids;
-};
+const rootPattern = (root: string) => escapeRe(
+	root.replace(/\\/g, '/').replace(/\/+$/, '')
+).replace(/\//g, '[/\\\\]');
 
 /*
- * 文件是否属于该入口的扫描范围：
- * 入口自己的目录，或其它入口引用的 shared。
+ * 入口的 `content.pipeline.include`：由它决定「哪些文件属于这个入口」，
+ * 取代原先自己写的 `fileBelongsToEntry`。
+ *
+ * 必须是 RegExp 而不能用 glob：Vue SFC 的子请求 id 形如
+ * `a.vue?vue&type=template`，glob 匹配不到（官方默认 include 同样是带 `($|\?)` 的 RegExp）。
+ *
+ * 非 shared 入口额外带上 shared 目录，保证公共 class 也能按本入口的配置生成。
  */
-export const fileBelongsToEntry = (
-	file: string,
+export const pipelineIncludeForEntry = (
 	entry: string,
 	root: string,
 	sharedName = 'shared'
 ) => {
-	if (entry === FALLBACK_UNO_ENTRY) {
-		const rel = path.relative(root, file.split('?')[0]);
-		return !!rel && !rel.startsWith('..') && !path.isAbsolute(rel);
-	}
-	const rel = path.relative(root, file.split('?')[0]);
-	if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return false;
-	const top = rel.split(path.sep)[0];
-	return top === entry || (top === sharedName && entry !== sharedName);
-};
-
-/*
- * 递归收集可扫描源文件（vue / ts / js / html），跳过 node_modules / dist 等。
- */
-export const collectScanFiles = (dir: string, acc: string[] = []) => {
-	if (!fs.existsSync(dir)) return acc;
-	const names = fs.readdirSync(dir);
-	for (let i = 0; i < names.length; i++) {
-		const full = path.join(dir, names[i]);
-		if (IGNORE_DIR_RE.test(full)) continue;
-		const stat = fs.statSync(full);
-		if (stat.isDirectory()) {
-			collectScanFiles(full, acc);
-			continue;
-		}
-		if (SCAN_RE.test(names[i])) acc.push(full);
-	}
-	return acc;
-};
-
-/*
- * 某入口要扫描的目录：自身 +（非 shared 时）shared，保证公共 class 也能生成。
- */
-export const sourcesForEntry = (entry: string, root: string, sharedName: string) => {
-	if (entry === FALLBACK_UNO_ENTRY) return collectScanFiles(root, []);
-	const dirs = [path.resolve(root, entry)];
-	if (entry !== sharedName) dirs.push(path.resolve(root, sharedName));
-	const files: string[] = [];
-	for (let i = 0; i < dirs.length; i++) {
-		collectScanFiles(dirs[i], files);
-	}
-	return files;
-};
-
-/*
- * 用 `entries[entry]`（可被 `UNOCSS_OPTIONS` 覆盖）建生成器，扫描该入口源码后产出 CSS。
- */
-export const generateUnoEntryCss = async ({
-	entry,
-	root,
-	sharedName = 'shared',
-	entries = {},
-	envOptions = parseUnoEnvOptions()
-}: {
-	entry: string;
-	root: string;
-	sharedName?: string;
-	entries?: UnoEntries;
-	envOptions?: UnoEntryOptions;
-}) => {
-	if (entry !== FALLBACK_UNO_ENTRY && Object.keys(entries).length && !(entry in entries)) {
-		console.warn(`[uno-multiple-entry] missing entries.${entry} in UNOCSS_ENTRIES, fallback to {}`);
-	}
-	const uno = await createGenerator({
-		presets: [
-			presetStyle(mergeUnoOptions(entries[entry] || {}, envOptions))
-		]
-	});
-	const files = sourcesForEntry(entry, root, sharedName);
-	const code = files.map(file => fs.readFileSync(file, 'utf8')).join('\n');
-	const result = await uno.generate(code, { minify: false });
-	return result.css;
+	const dirs = entry === FALLBACK_UNO_ENTRY
+		? []
+		: entry === sharedName ? [entry] : [entry, sharedName];
+	const scope = dirs.length ? `(?:${dirs.map(escapeRe).join('|')})[/\\\\]` : '';
+	return new RegExp(`^${rootPattern(root)}[/\\\\]${scope}.*\\.${SOURCE_EXT_RE_SOURCE}($|\\?)`);
 };
