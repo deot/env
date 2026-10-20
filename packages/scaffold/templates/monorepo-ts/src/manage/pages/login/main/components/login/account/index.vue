@@ -48,7 +48,7 @@
 					@submit="handleLogin"
 				/>
 				<div class="g-flex g-jc-sb" style="margin-top: -5px;">
-					<div class="g-col" />
+					<div class="g-f-1" />
 					<div
 						v-if="type === 'password'"
 						class="g-pointer"

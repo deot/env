@@ -8,3 +8,24 @@
 .g-disabled {
 	cursor: not-allowed;
 }
+
+.g-badge-dot {
+	position: relative;
+
+	&::after {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		width: 6px;
+		height: 6px;
+		overflow: hidden;
+		text-align: center;
+		background-color: #f53f3f;
+		border-radius: 20px;
+		content: "";
+		transform: translate(50%, -50%);
+		box-shadow: 0 0 0 2px #fff;
+		box-sizing: border-box;
+		transform-origin: 100% 0;
+	}
+}

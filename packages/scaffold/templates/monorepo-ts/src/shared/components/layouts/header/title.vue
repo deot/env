@@ -1,5 +1,5 @@
 <template>
-	<div class="c-ldhi g-nowrap g-flex-ac" style="color: #080F20;">
+	<div class="c-ldhi g-line-nowrap g-flex-ac" style="color: #080F20;">
 		<span v-if="layoutTabsStore.disabled && !isInner" class="g-fs-20 g-fw-600">{{ title }}</span>
 		<div v-else-if="isInner && (layoutTabsStore.disabled || layoutTabsStore.innerDisabled)" class="g-flex-ac">
 			<Icon

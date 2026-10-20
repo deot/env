@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="isInner && !layoutTabsStore.disabled && !layoutTabsStore.innerDisabled"
-		class="c-ldhii g-nowrap g-flex-ac g-pd-t-8"
+		class="c-ldhii g-line-nowrap g-flex-ac g-pd-t-8"
 		style="color: #1D2129;"
 	>
 		<div

@@ -15,8 +15,8 @@ importers:
         specifier: ^1.1.10
         version: 1.1.10
       '@deot/style':
-        specifier: ^1.1.4
-        version: 1.1.4
+        specifier: ^1.3.1
+        version: 1.3.1
       '@deot/vc':
         specifier: ^1.0.73
         version: 1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@5.9.3))
@@ -58,8 +58,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15(@testing-library/dom@9.3.4)(@types/node@25.9.5)(@typescript-eslint/utils@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-dom@3.5.42)(@vue/compiler-sfc@3.5.42)(@vue/server-renderer@3.5.42)(esbuild@0.28.2)(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(lightningcss@1.33.0)(postcss-html@1.8.1)(postcss@8.5.26)(sass@1.103.1)(stylelint@17.14.1(typescript@5.9.3))(tsx@4.23.13)(typescript@5.9.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0))(vue-eslint-parser@10.4.1(eslint@10.9.1(jiti@2.7.0)))(yaml@2.9.0)
       '@deot/style-unocss':
-        specifier: ^1.3.0
-        version: 1.3.0(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))
+        specifier: ^1.3.1
+        version: 1.3.1(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
@@ -431,13 +431,13 @@ packages:
   '@deot/http@1.1.10':
     resolution: {integrity: sha512-SYF8a7vaacOJ1YGRgkUZ4pmT3fvUL6xfhf56tuCcu7ah+viwd7CvmC/hKKdJoqZ5yehposT5fL2LvIDFKL/iyQ==}
 
-  '@deot/style-unocss@1.3.0':
-    resolution: {integrity: sha512-yvkhzv6LmVy6PvUojvJhyMwJoyAoRr8/SQwHIEHNTRmqvzypG2veEiCUSlK4wKJPvt+yDobAjopfGJ/hh4th5Q==}
+  '@deot/style-unocss@1.3.1':
+    resolution: {integrity: sha512-8gYc/E8C7vDS2TMwiqbP81YgV1+PXnYPMoK1Kd3nWzkX2qlEjYQZOu7wUXJGv0D9XMHPVJ0aiusNAmT5dFxTiA==}
     peerDependencies:
       unocss: ^66.9.1
 
-  '@deot/style@1.1.4':
-    resolution: {integrity: sha512-wBlUKR9ltdWAmAcvMlAp9mE028mcxnDvg9i+GDQpCuCyKaNjLS+TWzIi48vko1Ob/5kpAHzG2pRiQ1KCakHDlw==}
+  '@deot/style@1.3.1':
+    resolution: {integrity: sha512-KQ3zC7aWHRZp2fuv+OYDxYE4L0jWsg54s3DHb+xrUddt+bOlfwvPcZglKL/yGpLcDlRRxFBVvGvc379E5RYKZg==}
 
   '@deot/vc-components@1.0.73':
     resolution: {integrity: sha512-Jwfvlxqa2F+/hm3v8tZnPJlzpO6yXQExfWsCfv3OLUbmkNIXcVb1903cJzd8dAE+ZBck/qAODUK4hq1rHH5h6Q==}
@@ -6242,13 +6242,13 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@deot/style-unocss@1.3.0(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))':
+  '@deot/style-unocss@1.3.1(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))':
     dependencies:
       '@unocss/extractor-arbitrary-variants': 66.10.0
       '@unocss/preset-mini': 66.10.0
       unocss: 66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0))
 
-  '@deot/style@1.1.4': {}
+  '@deot/style@1.3.1': {}
 
   '@deot/vc-components@1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@5.9.3))':
     optionalDependencies:

@@ -1,7 +1,7 @@
 <template>
 	<teleport to="body">
 		<div
-			class="c-lddf__handle g-fs-26 g-c-fff"
+			class="c-lddf__handle g-fs-26 g-c-white"
 			@click="handleClick"
 		>
 			<VIcon type="download"/>

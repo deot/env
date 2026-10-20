@@ -6,7 +6,7 @@
 		@click="() => linkPage()"
 		@contextmenu.prevent="handleShowMenu"
 	>
-		<div class="c-ldntt__label g-line-one">
+		<div class="c-ldntt__label g-line-1">
 			<span>
 				<span>{{ label }}</span>
 				<span v-if="currentSameIndex >= 0">({{ currentSameIndex + 1 }})</span>
@@ -14,7 +14,7 @@
 		</div>
 		<div
 			v-if="deletable !== false"
-			class="c-ldntt__close g-flex-cc g-w-14 g-h-14 g-fss-0"
+			class="c-ldntt__close g-flex-cc g-w-14 g-h-14 g-fsh-0"
 			:style="{ color: isActive ? 'white' : '#86909c'}"
 			@click.stop="handleDeleteTag"
 		>

@@ -8,7 +8,7 @@
 					:previewable="false"
 				/>
 			</div>
-			<div v-if="current" class="g-fs-20 g-fw-600 g-nowrap g-f-1" style=" line-height: 26px;color: #080F20;">
+			<div v-if="current" class="g-fs-20 g-fw-600 g-line-nowrap g-f-1" style=" line-height: 26px;color: #080F20;">
 				{{ current.fullLabel || current.label }}
 			</div>
 			<div

@@ -7,7 +7,7 @@
 		}"
 		@click="handleSend"
 	>
-		<div v-if="!solid" class="g-col" />
+		<div v-if="!solid" class="g-f-1" />
 		<text v-if="status === 'pending'">{{ seconds }}s</text>
 		<text v-if="!solid || status !== 'pending'" :class="{ 'g-c-999': status === 'pending' }">{{ STATUS_MAP[status] }}</text>
 	</div>
