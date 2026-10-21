@@ -5,7 +5,7 @@
 
 # @deot/env
 
-`@deot/env` 是面向 Vue/Vite 项目的统一开发环境。它提供 `dec` 命令、Vite 开发与构建流程、约定式页面和布局发现，以及 monorepo 中多应用与 shared 公共层的组织能力。
+`@deot/env` 是面向 Vue / Vite 项目的统一开发环境。通过 `dec init` 创建项目，再使用 `dec dev` 与 `dec build` 开发和构建；单应用与多应用 workspace 共用配置、文件路由和布局约定。
 
 ## 特性
 
@@ -27,7 +27,19 @@ pnpm add -D @deot/env
 
 ## 快速开始
 
-推荐把多个前端应用和公共层放在同一个 workspace 中：
+新项目可以直接从内置模板开始：
+
+```bash
+pnpm dlx @deot/env-cli init my-app
+cd my-app
+npm run dev
+```
+
+交互选择 Single / Monorepo、JavaScript / TypeScript，生成完成后默认安装依赖。构建时运行 `npm run build`。全部选项见 [CLI](./packages/cli/README.md#dec-init)，模板能力见 [Scaffold](./packages/scaffold/README.md)。
+
+### 接入已有项目
+
+已有项目安装 `@deot/env` 后，可以把多个前端应用和公共层放在同一个 workspace 中：
 
 ```text
 project/
@@ -108,7 +120,7 @@ dec build --workspace src --out-dir dist --package-name manage
 | 包 | 版本 | 职责 |
 | --- | --- | --- |
 | [`@deot/env`](./packages/index) | [![npm][npm-image]][npm-url] | 聚合安装包；代码入口导出 `Dever` |
-| [`@deot/env-cli`](./packages/cli) | [![npm][npm-cli-image]][npm-cli-url] | 提供 `dec dev` 与 `dec build` |
+| [`@deot/env-cli`](./packages/cli) | [![npm][npm-cli-image]][npm-cli-url] | 提供 `dec init`、`dec dev` 与 `dec build` |
 | [`@deot/env-deps`](./packages/deps) | [![npm][npm-deps-image]][npm-deps-url] | 聚合 `@deot/dev` 开发工具链 |
 | [`@deot/env-dever`](./packages/dever) | [![npm][npm-dever-image]][npm-dever-url] | 解析 workspace，创建 Vite 服务与应用构建 |
 | [`@deot/env-shared`](./packages/shared) | [![npm][npm-shared-image]][npm-shared-url] | 提供 workspace 元数据与日志工具 |
@@ -122,6 +134,7 @@ dec build --workspace src --out-dir dist --package-name manage
 - [配置扩展](./docs/configuration.md)：Vite 配置优先级、环境数据、alias、样式和代码检查。
 - [构建与部署](./docs/build-and-deploy.md)：独立构建、合并构建、静态资源与分环境部署。
 - [CLI](./packages/cli/README.md)：命令和参数。
+- [Scaffold](./packages/scaffold/README.md)：项目模板、生成 API 与仓库内预览。
 - [Dever](./packages/dever/README.md)：开发与构建运行时。
 - [Vue 集成](./packages/vue/README.md)：自动路由与布局目录。
 
@@ -160,6 +173,8 @@ npm run build
 # 代码检查
 npm run lint
 ```
+
+文档站使用 `@deot/docs` 1.2.7，根 `index.html` 配置首页、主题、导航和资源解析。指南位于 `docs/`，包文档直接读取各包的 `README.md`；修改 Markdown 后会实时更新。站点提供中英文界面和首页，正文共用中文文档。
 
 ## 相关项目
 

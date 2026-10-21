@@ -11,19 +11,22 @@ pnpm add -D @deot/env
 安装后可以直接使用：
 
 ```bash
+dec init my-app
 dec dev --workspace src
 dec build --workspace src --out-dir dist
 ```
+
+`dec init` 创建新目录；开发和构建命令应在目标项目根目录运行。第一次接入请按[快速开始](../../docs/getting-started.md)完成项目创建或 workspace 配置。
 
 ## 包含的包
 
 | 依赖 | 作用 |
 | --- | --- |
-| [`@deot/env-cli`](../cli) | 提供 `dec` 可执行命令 |
+| [`@deot/env-cli`](../cli) | 提供 `dec init`、`dec dev` 与 `dec build` |
 | [`@deot/env-deps`](../deps) | 带入 `@deot/dev` 工具链 |
 | [`@deot/env-dever`](../dever) | Vite 开发和构建运行时 |
 
-`@deot/env-vue` 与 `@deot/env-shared` 由 Dever 间接使用，无需在普通项目中重复安装。
+[`@deot/env-scaffold`](../scaffold/README.md) 由 CLI 引入，提供项目生成器与模板；`@deot/env-vue` 与 `@deot/env-shared` 由 Dever 间接使用，无需在普通项目中重复安装。
 
 ## 代码 API
 

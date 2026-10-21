@@ -59,6 +59,16 @@ pnpm dlx @deot/env-cli init my-app
 
 目标目录必须不存在。`monorepo` 模板包含 `manage`、`mobile` 和 `shared`；四种组合均使用 `@deot/vc`，不依赖远程模板仓库。
 
+创建完成后进入项目运行：
+
+```bash
+cd my-app
+npm run dev
+npm run build
+```
+
+使用 `--no-install` 时先运行 `pnpm install`。模板内容与生成 API 见 [`@deot/env-scaffold`](../scaffold/README.md)。
+
 ## `dec dev`
 
 ```bash

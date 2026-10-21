@@ -29,14 +29,32 @@ dec init my-app
 pnpm dlx @deot/env-cli init my-app
 ```
 
-交互流程会选择 `single` 或 `monorepo`，以及 JavaScript 或 TypeScript。生成完成后默认执行 `pnpm install`；需要跳过时使用：
+交互流程会选择 `single` 或 `monorepo`，以及 JavaScript 或 TypeScript。生成完成后默认执行 `pnpm install`。
 
+明确结构和语言时，也可以直接指定：
+
+:::tabs
+````markdown Single
 ```bash
-dec init my-app \
-	--template monorepo \
-	--language ts \
-	--no-install
+pnpm dlx @deot/env-cli init my-app --template single --language ts
+cd my-app
+npm run dev
 ```
+````
+````markdown Monorepo
+```bash
+pnpm dlx @deot/env-cli init my-app --template monorepo --language ts
+cd my-app
+npm run dev
+```
+````
+:::
+
+JavaScript 项目使用 `--language js`。生成的项目已声明开发与构建脚本，运行 `npm run build` 即可构建。
+
+:::tip
+需要跳过依赖安装时追加 `--no-install`，再进入项目执行 `pnpm install`。完整模板结构与预览命令见 [Scaffold](../packages/scaffold/README.md)。
+:::
 
 非交互环境必须显式提供项目名、模板和语言，且同样默认安装依赖。目标目录必须不存在，CLI 不会覆盖已有文件，也不会自动执行 `git init`。
 
@@ -177,7 +195,9 @@ dec build \
 	--package-name manage,mobile,shared
 ```
 
-上述命令只创建 `dist/manage`，但自动路由会同时读取 `manage`、`mobile` 和 `shared/examples`。完整规则见[构建与部署](./build-and-deploy.md)。
+:::warning
+逗号分隔的 `--package-name` 表示合并页面。上述命令只创建 `dist/manage`，自动路由会同时读取 `manage`、`mobile` 和 `shared/examples`。需要独立产物时分别构建，完整规则见[构建与部署](./build-and-deploy.md)。
+:::
 
 ## 单仓库模式
 
