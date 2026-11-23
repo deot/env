@@ -1,5 +1,35 @@
 # @deot/env ChangeLog
 
+## v1.1.0
+
+_2026-11-23_
+
+### Bugfixes
+
+- fix(dever): support official uno.css aliases and harden entry routing ([4ae9982](https://github.com/deot/env/commit/4ae9982c03fba9ae9f034be2a7a0357bed7cc0e1))
+- fix(dever): set content-type for virtual html responses ([66166f6](https://github.com/deot/env/commit/66166f6665503f500e18e5659d4dbe72f52c23d3))
+- fix(scaffold): upgrade @deot/vc and adapt plugin callbacks ([607eed5](https://github.com/deot/env/commit/607eed5fcc7283bd11e2272ccadf310c84baee95))
+- fix(scaffold): migrate obsolete utility classes and add badge styles ([df9f0f3](https://github.com/deot/env/commit/df9f0f3a143069c525491eb0498ecae681f51333))
+- fix(*): dependencies & unexpected build ([7d589b9](https://github.com/deot/env/commit/7d589b92dbb13c0e052efcc01ce78f1b7a8626dc))
+
+### Features
+
+- feat(cli,dever,scaffold): add project init with per-entry UnoCSS ([f70c14c](https://github.com/deot/env/commit/f70c14c5f44fe275a50470d3fb33c10b7f340a57))
+- feat(dever): support ios12 as minimum build target ([3ae2458](https://github.com/deot/env/commit/3ae2458b3e47dad2a3a0d6c2b214989e627faaaa))
+- feat(scaffold): add single JavaScript and TypeScript scaffold templates ([1810c0c](https://github.com/deot/env/commit/1810c0c28ad8f5eb699df2f5fd91e82c65deb514))
+- feat(scaffold): add monorepo TypeScript scaffold template ([8975816](https://github.com/deot/env/commit/897581689d7e1d3b2d9ff7ec471f7a8a818af82d))
+- feat(*): {workspace}/shared as packageName prefix ([464bf1e](https://github.com/deot/env/commit/464bf1e2627849599c4c4c330e00697b9f5e5627))
+- feat(*): add `--workspace` & `--out-dir`(monorepo) & branch & singlerepo ([5c0767a](https://github.com/deot/env/commit/5c0767a63aa930d5a2f7f6df4e2f2afbb5f449a0))
+- feat(*): dev/build initial commit ([beb77ec](https://github.com/deot/env/commit/beb77ec2ae8cd71effbea9af920dd09083c0b890))
+
+### Updates
+
+- chore: deps updated ([42f13b5](https://github.com/deot/env/commit/42f13b55889b5d335bc22d5b6cad8dadb753c3fd))
+- refactor(dever,scaffold): configure per-package UnoCSS via import query ([02139f2](https://github.com/deot/env/commit/02139f2eee6f5bf869523d29c549461868559938))
+- refactor(dever): delegate per-entry UnoCSS to official vite plugin instances ([a7c3561](https://github.com/deot/env/commit/a7c35610d15bb535c3bfbd74fcd40938d78ddbde))
+- chore(*): deps updated ([3ddfdf3](https://github.com/deot/env/commit/3ddfdf3bc70f76b306d8d7fec6b8a880ed3156ce))
+- chore(*): deps updated ([6269a3c](https://github.com/deot/env/commit/6269a3cd1f74508dee6b1e1b610b41e237730f05))
+
 ## v1.0.15
 
 _2026-01-20_

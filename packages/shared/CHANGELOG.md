@@ -1,5 +1,13 @@
 # @deot/env-shared ChangeLog
 
+## v1.1.0
+
+_2026-11-23_
+
+### Updates
+
+- chore: deps updated ([42f13b5](https://github.com/deot/env/commit/42f13b55889b5d335bc22d5b6cad8dadb753c3fd))
+
 ## v1.0.7
 
 _2026-01-14_

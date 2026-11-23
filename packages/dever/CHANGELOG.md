@@ -1,5 +1,25 @@
 # @deot/env-dever ChangeLog
 
+## v1.1.0
+
+_2026-11-23_
+
+### Bugfixes
+
+- fix: support official uno.css aliases and harden entry routing ([4ae9982](https://github.com/deot/env/commit/4ae9982c03fba9ae9f034be2a7a0357bed7cc0e1))
+- fix: set content-type for virtual html responses ([66166f6](https://github.com/deot/env/commit/66166f6665503f500e18e5659d4dbe72f52c23d3))
+
+### Features
+
+- feat: add project init with per-entry UnoCSS ([f70c14c](https://github.com/deot/env/commit/f70c14c5f44fe275a50470d3fb33c10b7f340a57))
+- feat: support ios12 as minimum build target ([3ae2458](https://github.com/deot/env/commit/3ae2458b3e47dad2a3a0d6c2b214989e627faaaa))
+
+### Updates
+
+- refactor: configure per-package UnoCSS via import query ([02139f2](https://github.com/deot/env/commit/02139f2eee6f5bf869523d29c549461868559938))
+- refactor: delegate per-entry UnoCSS to official vite plugin instances ([a7c3561](https://github.com/deot/env/commit/a7c35610d15bb535c3bfbd74fcd40938d78ddbde))
+- chore: deps updated ([42f13b5](https://github.com/deot/env/commit/42f13b55889b5d335bc22d5b6cad8dadb753c3fd))
+
 ## v1.0.15
 
 _2026-01-20_
