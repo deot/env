@@ -1,11 +1,12 @@
-import { createVcPlugin, VcInstance } from '@deot/vc';
+import { createVcPlugin } from '@deot/vc/full';
+import { VcInstance } from '@deot/vc';
 import { transfromOssMessage } from '@/shared/stores/apis/upload';
 
 export const install = (context) => {
 	const vc = createVcPlugin(
 		{
 			Portal: {
-				aliveRegExp: { className: /(vc-portal-alive|vc-modal|vc-drawer)/ },
+				aliveRules: { className: /(vc-portal-alive|vc-modal|vc-drawer)/ },
 				install: (app) => {
 					app.use(vc);
 					app.use(context.Global);
@@ -15,7 +16,7 @@ export const install = (context) => {
 				}
 			},
 			Upload: {
-				onRequest: async (options) => {
+				onRequest: async ({ requestOptions: options }) => {
 					// 非oss地址
 					if (options.url) return {
 						...options,
@@ -37,7 +38,7 @@ export const install = (context) => {
 						}
 					};
 				},
-				onResponse: (request, options) => {
+				onResponse: ({ request, requestOptions: options }) => {
 					const response = request?.responseText || request?.response;
 					const e = {
 						file: options.file
@@ -45,6 +46,8 @@ export const install = (context) => {
 					// OSS地址
 					if (!response) {
 						e.source = `${options.url}/${options.body.key}`;
+						// ETag 形如 "MD5"，引号是头字段格式，不是摘要的一部分
+						e.entityTag = request?.getResponseHeader?.('etag')?.replace(/^"|"$/g, '');
 					} else {
 						const v = JSON.parse(response);
 						e.data = v;
@@ -52,7 +55,7 @@ export const install = (context) => {
 					}
 					return e;
 				},
-				onMessage: (e, message) => {
+				onMessage: ({ cause: e, message }) => {
 					// OSS报的错误
 					if (e && e.data) {
 						return transfromOssMessage(e.data) || message;
@@ -64,7 +67,7 @@ export const install = (context) => {
 				line: 1
 			},
 			Snapshot: {
-				download: async (instance, options) => {
+				download: async ({ instance, options }) => {
 					if (options.format === 'pdf') {
 						await instance.exposed.refresh();
 						const canvas = await instance.exposed.snapshot.value.toCanvas();

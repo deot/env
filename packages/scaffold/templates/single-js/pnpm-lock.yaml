@@ -9,17 +9,17 @@ importers:
   .:
     dependencies:
       '@deot/helper':
-        specifier: ^1.1.16
-        version: 1.1.17
+        specifier: ^1.1.23
+        version: 1.1.24
       '@deot/http':
         specifier: ^1.1.10
         version: 1.1.10
       '@deot/style':
-        specifier: ^1.1.4
-        version: 1.1.4
+        specifier: ^1.3.1
+        version: 1.3.2
       '@deot/vc':
-        specifier: ^1.0.73
-        version: 1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))
+        specifier: ^1.2.6
+        version: 1.2.6(@deot/helper@1.1.24)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))
       '@zumer/snapdom':
         specifier: ^2.0.1
         version: 2.24.12
@@ -58,8 +58,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15(@testing-library/dom@9.3.4)(@types/node@25.9.5)(@typescript-eslint/utils@8.68.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(@vue/compiler-dom@3.5.42)(@vue/compiler-sfc@3.5.42)(@vue/server-renderer@3.5.42)(esbuild@0.28.2)(eslint@10.9.1(jiti@2.7.0))(jiti@2.7.0)(lightningcss@1.33.0)(postcss-html@1.8.1)(postcss@8.5.26)(sass@1.103.1)(stylelint@17.14.1(typescript@6.0.3))(tsx@4.23.13)(typescript@6.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0))(vue-eslint-parser@10.4.1(eslint@10.9.1(jiti@2.7.0)))(yaml@2.9.0)
       '@deot/style-unocss':
-        specifier: ^1.3.0
-        version: 1.3.0(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))
+        specifier: ^1.3.1
+        version: 1.3.1(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
@@ -362,20 +362,20 @@ packages:
   '@deot/env@1.0.15':
     resolution: {integrity: sha512-DYB4R57b6QK660ui4sMxk0MgbDxNaJ3I/OnkBTxSXc+Uj0py4Sx0gq/Xl761aGA1pmuIU647mFAqO6hj4YeVgQ==}
 
-  '@deot/helper-cache@1.1.10':
-    resolution: {integrity: sha512-izAaS6xMy9Dlbqs1/mUZiZYl0+x/o0Lqa2lzkFgtWvmuizB5TwemZBoZMNt9B/yZqkqPcw5iTed+sSLX1CA5kQ==}
+  '@deot/helper-cache@1.1.11':
+    resolution: {integrity: sha512-ATGydSd70b5TCIshO5zXP3gKp14aMSdwDHM0VepzS/WNJgvo7KzoAIkQ9FTCJBVIO0I21wHRth/h4DZbrI7pCA==}
 
   '@deot/helper-device@1.1.3':
     resolution: {integrity: sha512-2HJMprcalhJj+wvXD60HnpxG4QwGS0YYp/41tv0m6/Xd/dat8v7mBqfJtkj8WBv3g+3kSu+f8U8bUfQZ89oB4g==}
 
-  '@deot/helper-dom@1.1.5':
-    resolution: {integrity: sha512-C/Ph4L13cF0Uf0FF4I1lJEehsBe/bJydM90VxleOpByiiF6vz6ZursoNA948oSq4iCuuu5LFm28AmRZSaHEmrw==}
+  '@deot/helper-dom@1.1.7':
+    resolution: {integrity: sha512-+2GMN/Ay7VezLbi5q5ml+qyxp2VEToCur7WB8mNP1pvPdu3LQTxsKTwJ76EAOxtYEq5lpikok4pnAaPMTqjO8Q==}
 
   '@deot/helper-emitter@1.1.3':
     resolution: {integrity: sha512-zF0B/aw0vDS8JlWjhZhjngDATKfLBIxmbx9IlZJ+oOUCuJRn75SMaRqOONDIvqrkExBGiMfF6GGvFHlzT6GWRw==}
 
-  '@deot/helper-fp@1.1.5':
-    resolution: {integrity: sha512-DVwkpa0xBIQESRcFplDlS3lXTF8ZZZFzIlhZ6+Kl4E3A7wmXfZTGG3jfVgK0cMgM1Ciy/Ygf5vDXSz+6yFn+Fw==}
+  '@deot/helper-fp@1.1.6':
+    resolution: {integrity: sha512-+y30UR7ztMbSJIzsQ2p9nZH+gqlsHlYthWB4TlP/PlAavovd4j7rAcO92YXVda1XwCphFD7WuwacG4dkh74/yw==}
 
   '@deot/helper-is@1.1.3':
     resolution: {integrity: sha512-XcdTjx35OA3/gZ+C+II2PZKC2EgQs7jFjUddfdKM7Zkeb3HcUNScnr8uJTC5usx2hvwqsvl+XIjNKFqBTVAdKA==}
@@ -383,14 +383,14 @@ packages:
   '@deot/helper-load@1.1.3':
     resolution: {integrity: sha512-FWDjG5IuiVdNLzJAqLTOBt5wf3GbB12wbPkpR8Ap6x5dnEqjjpwuUSIIAKqaCLdwfACV0ayf+oRZqKrosEXzrg==}
 
-  '@deot/helper-resize@1.1.3':
-    resolution: {integrity: sha512-AXYK+0D+iTtwS57JzDF2+GIh16zml91Vv/VX0R97to8BG0/C9M7aIBo01OMPcHWY2aHJezr60rWWiwrod/YNhA==}
+  '@deot/helper-resize@1.1.6':
+    resolution: {integrity: sha512-v5AyTx5wVCt3hZcN9dHCRQseDrBn/8S4Gl97NRoC1u0T8G8pTE0cV0biBpUzcRsN9OqOuxwLZ0fPAOY+3Q7jzg==}
 
-  '@deot/helper-route@1.1.9':
-    resolution: {integrity: sha512-FxsvPW1wyx0HzkyzvvbJ3xwkE7D8droNN5+Xl90U1dHz6SyX+Jv/KKgGjNush0qFiaGKFcnjiyKVwjTnE1EiYA==}
+  '@deot/helper-route@1.1.10':
+    resolution: {integrity: sha512-aKN90K4ZN/6V8xT97CImWh8GELBY1K8UD43L0uY91dSBphK22dXNcup8RkpVApoZRbjW7FrjU2hqf0eonfNwMQ==}
 
-  '@deot/helper-scheduler@1.1.8':
-    resolution: {integrity: sha512-QDA+d0eTTQWyJw+dWceZmLnQfw0uJPNah4/wGdtBhLEOF9S6HTEZ/Z3WDdwJ7KF3dnmWbwvpekSEllz6z/hUKw==}
+  '@deot/helper-scheduler@1.1.9':
+    resolution: {integrity: sha512-OZlmqwqpP73Lm+wRO14E4IMaFs3b0F3c0Kno5bt7qo7HLVWtwNqtl57SNCwOm8s0wujOvnhFtMe616FuhThmwQ==}
 
   '@deot/helper-shared@1.1.3':
     resolution: {integrity: sha512-CrNlBA43hTAWBSAetd5HLjVkY3XpRNPV4QUzY+ts+pxkKey7QwsbISpZRQ3nklFjxY3bXrR5F/Sfk4czTVblAg==}
@@ -401,14 +401,17 @@ packages:
   '@deot/helper-utils@1.1.8':
     resolution: {integrity: sha512-Pa0BmRxYXpiZ/TCmTn/vusQzZo50FEb+u68ogxMp7fYUqTMUQCJRyp6AP43fRBfCu4ZTmv5w9gY/Sve3e41YxQ==}
 
+  '@deot/helper-utils@1.1.9':
+    resolution: {integrity: sha512-KzLByHLrNh4h179Oo1KiC7Cic94TdxcYpUadTpA67PTLraRZ0TCW0Q4otzCt4WiH9CY+3guiMhdasgKkdxJLVg==}
+
   '@deot/helper-validator@1.1.4':
     resolution: {integrity: sha512-qpCDqu8NHGPIY4kIlNL1VRj0zwl888Lena8+iutxRGoSmt6BrQ39B1uqtUO2B0WC0+Zfaw7mTZ5oUFcGKxHTsw==}
 
-  '@deot/helper-wheel@1.1.6':
-    resolution: {integrity: sha512-8mT+Cufd3/+7+qDVz4Yqm51vmrPhxZh5VxtHWhAQUKR6P7k4ZIlxHd4zCvUH9AHdvAoOJQjhcpzD/vs7TxBKfA==}
+  '@deot/helper-wheel@1.1.9':
+    resolution: {integrity: sha512-8IOm09Z8OxqhKVCyOgR5mF5KkOEY4sLpp1PT1aCy5qcK+JOkkqEosm6GqFYSm4F0wc2f70wvaMlqEJz2m29iKQ==}
 
-  '@deot/helper@1.1.17':
-    resolution: {integrity: sha512-rog/q2h5DoVg0a8fAeyzD/vBohBdSuOceE+oEnVtKdSrJiVvhsNSEDZhFuNqfHyHOH+8VoR4hOqj3QWVwvxlhQ==}
+  '@deot/helper@1.1.24':
+    resolution: {integrity: sha512-QbWff8PiQ8mcqepeZTydbmyUgZGRc9u4YOQ8ZslKHnZp0GItaxAsLOo1GDZWv1q48zOcy8Sz4YU+iPZ0cJeXEg==}
 
   '@deot/http-client@1.1.10':
     resolution: {integrity: sha512-B6gI7KK7hNSCTkOCQmPnnoWN92tRn5g2TxZBB4Fe9hBRRKFKed3RhthvQw+e7xsWahIzKK9df41YXdIjXI4kmQ==}
@@ -425,22 +428,21 @@ packages:
   '@deot/http@1.1.10':
     resolution: {integrity: sha512-SYF8a7vaacOJ1YGRgkUZ4pmT3fvUL6xfhf56tuCcu7ah+viwd7CvmC/hKKdJoqZ5yehposT5fL2LvIDFKL/iyQ==}
 
-  '@deot/style-unocss@1.3.0':
-    resolution: {integrity: sha512-yvkhzv6LmVy6PvUojvJhyMwJoyAoRr8/SQwHIEHNTRmqvzypG2veEiCUSlK4wKJPvt+yDobAjopfGJ/hh4th5Q==}
+  '@deot/style-unocss@1.3.1':
+    resolution: {integrity: sha512-8gYc/E8C7vDS2TMwiqbP81YgV1+PXnYPMoK1Kd3nWzkX2qlEjYQZOu7wUXJGv0D9XMHPVJ0aiusNAmT5dFxTiA==}
     peerDependencies:
       unocss: ^66.9.1
 
-  '@deot/style@1.1.4':
-    resolution: {integrity: sha512-wBlUKR9ltdWAmAcvMlAp9mE028mcxnDvg9i+GDQpCuCyKaNjLS+TWzIi48vko1Ob/5kpAHzG2pRiQ1KCakHDlw==}
+  '@deot/style@1.3.2':
+    resolution: {integrity: sha512-Q+AP+w9Uzu9kvzwpg18e3D/Ik9X/vEmJkcnipZHAIWvXSeA+NmbEve0PSE/ZM6ocUxJH4uxfHy5umJN4j+CAkw==}
 
-  '@deot/vc-components@1.0.73':
-    resolution: {integrity: sha512-Jwfvlxqa2F+/hm3v8tZnPJlzpO6yXQExfWsCfv3OLUbmkNIXcVb1903cJzd8dAE+ZBck/qAODUK4hq1rHH5h6Q==}
+  '@deot/vc-components@1.2.6':
+    resolution: {integrity: sha512-RR0HD5nT03TMptd7Cg1d0be2OxhGWGszjoqjAkH72Dw2CBJSYhGjwFHext3UAkY+cp617+Dz/y2kzSgFafujXg==}
     peerDependencies:
       '@deot/helper': '*'
       '@zumer/snapdom': '*'
       echarts: '*'
       lodash-es: '*'
-      photoswipe: '*'
       quill: '*'
       vue: '*'
     peerDependenciesMeta:
@@ -452,26 +454,27 @@ packages:
         optional: true
       lodash-es:
         optional: true
-      photoswipe:
-        optional: true
       quill:
         optional: true
       vue:
         optional: true
 
-  '@deot/vc-hooks@1.0.73':
-    resolution: {integrity: sha512-//Bdubw/eonm3YlFbl2QOdrFkcXK21L5zNPJXeQHMscV79TOSZfcgNSgN8VJXUoYrE0SA5OtTw16vNXtXm6gwA==}
+  '@deot/vc-hooks@1.2.5':
+    resolution: {integrity: sha512-14VaIXTtfUUBrTANC5iaZogsf5vaVqM8jsyc/qzhUPRmDQSlc0s34A+jsU6QvQE5RHpMStFkHigFDKMjUa5WMg==}
     peerDependencies:
       vue: '*'
     peerDependenciesMeta:
       vue:
         optional: true
 
-  '@deot/vc-shared@1.0.73':
-    resolution: {integrity: sha512-qNYRNVLj0BLtHe1j8SZJue8ZVgiClzYaY6n+fzBlPJTzW2luJtT4j4JzU5ApOz8hDQK6nzfOWGcHFAxUE5YSPw==}
+  '@deot/vc-locale@1.2.5':
+    resolution: {integrity: sha512-/bKbn5f5NL9+OXiyYWHodf9vM1JHUAWk0AIoqpBoJnj4SGfX9OUGG18GbbY9CyU94sf4FAyVnvXM43vC6oZdzA==}
 
-  '@deot/vc@1.0.73':
-    resolution: {integrity: sha512-fx72gIdsM3Mx6XYinTViCn/TkuiGnJL27mHmPSFX6sUGIpo95ZZVm2/jKXlT1z1IQRE6gk9fWekD+KwmqMZvcw==}
+  '@deot/vc-shared@1.2.5':
+    resolution: {integrity: sha512-KjveUsAcz2p3iEzIdR1LpgSa6+Fn3lOm6fks7YItWWGELi1I6Q2J+OAIH3NUvsO4YKw+K+SZ34mjl3sgqx0tCg==}
+
+  '@deot/vc@1.2.6':
+    resolution: {integrity: sha512-fahhLvgjOtSOLSUAwq1E0aM4ICveLlf1t28uGgxIwTewr70BcxeOYso3uQrcB22cL74DdlmcJuaD4u9N+FXvRg==}
     peerDependencies:
       vue: '*'
     peerDependenciesMeta:
@@ -6147,17 +6150,17 @@ snapshots:
       - yaml
       - yauzl
 
-  '@deot/helper-cache@1.1.10':
+  '@deot/helper-cache@1.1.11':
     dependencies:
-      '@deot/helper-utils': 1.1.8
+      '@deot/helper-utils': 1.1.9
 
   '@deot/helper-device@1.1.3': {}
 
-  '@deot/helper-dom@1.1.5': {}
+  '@deot/helper-dom@1.1.7': {}
 
   '@deot/helper-emitter@1.1.3': {}
 
-  '@deot/helper-fp@1.1.5':
+  '@deot/helper-fp@1.1.6':
     dependencies:
       '@deot/helper-emitter': 1.1.3
 
@@ -6165,15 +6168,15 @@ snapshots:
 
   '@deot/helper-load@1.1.3': {}
 
-  '@deot/helper-resize@1.1.3': {}
+  '@deot/helper-resize@1.1.6': {}
 
-  '@deot/helper-route@1.1.9':
+  '@deot/helper-route@1.1.10':
     dependencies:
-      '@deot/helper-utils': 1.1.8
+      '@deot/helper-utils': 1.1.9
 
-  '@deot/helper-scheduler@1.1.8':
+  '@deot/helper-scheduler@1.1.9':
     dependencies:
-      '@deot/helper-fp': 1.1.5
+      '@deot/helper-fp': 1.1.6
 
   '@deot/helper-shared@1.1.3': {}
 
@@ -6183,29 +6186,31 @@ snapshots:
 
   '@deot/helper-utils@1.1.8': {}
 
+  '@deot/helper-utils@1.1.9': {}
+
   '@deot/helper-validator@1.1.4': {}
 
-  '@deot/helper-wheel@1.1.6':
+  '@deot/helper-wheel@1.1.9':
     dependencies:
       normalize-wheel: 1.0.1
 
-  '@deot/helper@1.1.17':
+  '@deot/helper@1.1.24':
     dependencies:
-      '@deot/helper-cache': 1.1.10
+      '@deot/helper-cache': 1.1.11
       '@deot/helper-device': 1.1.3
-      '@deot/helper-dom': 1.1.5
+      '@deot/helper-dom': 1.1.7
       '@deot/helper-emitter': 1.1.3
-      '@deot/helper-fp': 1.1.5
+      '@deot/helper-fp': 1.1.6
       '@deot/helper-is': 1.1.3
       '@deot/helper-load': 1.1.3
-      '@deot/helper-resize': 1.1.3
-      '@deot/helper-route': 1.1.9
-      '@deot/helper-scheduler': 1.1.8
+      '@deot/helper-resize': 1.1.6
+      '@deot/helper-route': 1.1.10
+      '@deot/helper-scheduler': 1.1.9
       '@deot/helper-shared': 1.1.3
       '@deot/helper-unicode': 1.1.4
-      '@deot/helper-utils': 1.1.8
+      '@deot/helper-utils': 1.1.9
       '@deot/helper-validator': 1.1.4
-      '@deot/helper-wheel': 1.1.6
+      '@deot/helper-wheel': 1.1.9
 
   '@deot/http-client@1.1.10':
     dependencies:
@@ -6236,35 +6241,43 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@deot/style-unocss@1.3.0(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))':
+  '@deot/style-unocss@1.3.1(unocss@66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)))':
     dependencies:
       '@unocss/extractor-arbitrary-variants': 66.10.0
       '@unocss/preset-mini': 66.10.0
       unocss: 66.10.0(@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3)))(cac@7.0.0)(crossws@0.4.12(srvx@1.0.3))(rolldown@1.2.6)(rollup@4.63.1)(srvx@1.0.3)(vite@8.2.2(@types/node@25.9.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0))
 
-  '@deot/style@1.1.4': {}
+  '@deot/style@1.3.2': {}
 
-  '@deot/vc-components@1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))':
+  '@deot/vc-components@1.2.6(@deot/helper@1.1.24)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      '@deot/vc-hooks': 1.2.5(vue@3.5.42(typescript@6.0.3))
+      '@deot/vc-locale': 1.2.5
+      '@deot/vc-shared': 1.2.5
     optionalDependencies:
-      '@deot/helper': 1.1.17
+      '@deot/helper': 1.1.24
       '@zumer/snapdom': 2.24.12
       echarts: 6.1.0
       lodash-es: 4.18.1
-      photoswipe: 5.4.4
       quill: 2.0.3
       vue: 3.5.42(typescript@6.0.3)
 
-  '@deot/vc-hooks@1.0.73(vue@3.5.42(typescript@6.0.3))':
+  '@deot/vc-hooks@1.2.5(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      '@deot/vc-shared': 1.2.5
     optionalDependencies:
       vue: 3.5.42(typescript@6.0.3)
 
-  '@deot/vc-shared@1.0.73': {}
+  '@deot/vc-locale@1.2.5': {}
 
-  '@deot/vc@1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))':
+  '@deot/vc-shared@1.2.5': {}
+
+  '@deot/vc@1.2.6(@deot/helper@1.1.24)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))':
     dependencies:
-      '@deot/vc-components': 1.0.73(@deot/helper@1.1.17)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(photoswipe@5.4.4)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))
-      '@deot/vc-hooks': 1.0.73(vue@3.5.42(typescript@6.0.3))
-      '@deot/vc-shared': 1.0.73
+      '@deot/vc-components': 1.2.6(@deot/helper@1.1.24)(@zumer/snapdom@2.24.12)(echarts@6.1.0)(lodash-es@4.18.1)(quill@2.0.3)(vue@3.5.42(typescript@6.0.3))
+      '@deot/vc-hooks': 1.2.5(vue@3.5.42(typescript@6.0.3))
+      '@deot/vc-locale': 1.2.5
+      '@deot/vc-shared': 1.2.5
     optionalDependencies:
       vue: 3.5.42(typescript@6.0.3)
     transitivePeerDependencies:
@@ -6272,7 +6285,6 @@ snapshots:
       - '@zumer/snapdom'
       - echarts
       - lodash-es
-      - photoswipe
       - quill
 
   '@devframes/hub@0.9.12(crossws@0.4.12(srvx@1.0.3))(devframe@0.9.12(cac@7.0.0)(srvx@1.0.3))':
