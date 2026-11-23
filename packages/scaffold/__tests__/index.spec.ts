@@ -239,6 +239,22 @@ describe('scaffold', () => {
 		})).rejects.toThrow('already exists');
 	});
 
+	it('rejects an unknown template or language', async () => {
+		await expect(createScaffold({
+			name: 'example',
+			targetDir: resolve(root, 'example'),
+			template: 'library' as 'single',
+			language: 'js'
+		})).rejects.toThrow('Unknown template');
+		await expect(createScaffold({
+			name: 'example',
+			targetDir: resolve(root, 'example'),
+			template: 'single',
+			language: 'coffee' as 'js'
+		})).rejects.toThrow('Unknown language');
+		expect(await readdir(root)).toEqual([]);
+	});
+
 	it('rejects an invalid project name without writing files', async () => {
 		await expect(createScaffold({
 			name: '../example',
