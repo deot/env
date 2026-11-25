@@ -38,7 +38,7 @@ const locals = Locals.impl('src');
 | `packageDirsMap` | 目录名到绝对路径的映射 |
 | `sharedPackageFolderName` | 多应用模式固定为 `shared` |
 
-workspace 扫描只收集目录，并忽略名称匹配 `^_`、`tpl` 或 `dist` 的目录。每个被识别的目录都需要包含 `package.json`。
+workspace 扫描只收集目录，并忽略以 `_` 开头，或 `tpl`、`dist` 作为独立片段（整段，或由 `-`、`_`、`.` 分隔）的目录。`marketplace` 不会因为中间的 `tpl` 被忽略。每个被识别的目录都需要包含 `package.json`。
 
 ### 包名转换
 

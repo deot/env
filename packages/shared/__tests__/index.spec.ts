@@ -1,6 +1,18 @@
 import { Locals } from '@deot/env-shared';
 
 describe('shared.ts', () => {
+	it('isIgnoredPackageFolder', () => {
+		expect(Locals.isIgnoredPackageFolder('marketplace')).toBe(false);
+		expect(Locals.isIgnoredPackageFolder('mobile')).toBe(false);
+		expect(Locals.isIgnoredPackageFolder('distro')).toBe(false);
+		expect(Locals.isIgnoredPackageFolder('_draft')).toBe(true);
+		expect(Locals.isIgnoredPackageFolder('tpl')).toBe(true);
+		expect(Locals.isIgnoredPackageFolder('dist')).toBe(true);
+		expect(Locals.isIgnoredPackageFolder('page.tpl')).toBe(true);
+		expect(Locals.isIgnoredPackageFolder('foo-dist')).toBe(true);
+		expect(Locals.isIgnoredPackageFolder('tpl-page')).toBe(true);
+	});
+
 	it('getPackageName/virtual-dir', () => {
 		expect(Locals.getPackageName('index', 'clients')).toBe('@clients/index');
 		expect(Locals.getPackageName('shared', 'clients')).toBe('@clients/shared');

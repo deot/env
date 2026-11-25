@@ -66,6 +66,14 @@ export const getRealPackageName = (names: string, workspace$: string) => {
 };
 
 const SHARED_PACKAGE_FOLDER_NAME = 'shared';
+/*
+ * `_` 开头的目录，以及 tpl / dist 作为独立片段的目录不参与扫描。
+ * 片段用开头、结尾或 - _ . 分隔，避免 marketplace 因为中间的 tpl 被排除。
+ */
+const IGNORED_PACKAGE_FOLDER = /(?:^_|[-_.](?:tpl|dist)(?:[-_.]|$)|^(?:tpl|dist)(?:[-_.]|$))/;
+
+export const isIgnoredPackageFolder = (file: string) => IGNORED_PACKAGE_FOLDER.test(file);
+
 const configMap: { [key: string]: Config } = {};
 export const impl = (workspace: string) => {
 	const isMonorepo = path.resolve(cwd, workspace || './') !== cwd;
@@ -83,7 +91,7 @@ export const impl = (workspace: string) => {
 				const fullpath = path.resolve(workspaceDir, file);
 				// 获取文件信息
 				const stat = fs.statSync(fullpath);
-				if (!(/(^_|tpl|dist)/.test(file)) && stat.isDirectory()) {
+				if (!isIgnoredPackageFolder(file) && stat.isDirectory()) {
 					pre.push(file);
 				}
 				return pre;

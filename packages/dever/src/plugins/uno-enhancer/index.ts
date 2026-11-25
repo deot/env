@@ -57,7 +57,7 @@ export default (options: Options, packageFolderName?: string): PluginOption => {
 
 	/*
 	 * 入口名会成为 `virtualModulePrefix`，而官方把它原样插进 `new RegExp()`。
-	 * `Locals` 只过滤了 `/(^_|tpl|dist)/`，一个叫 `my.app` 的目录照样会把 `.` 带进正则，
+	 * `Locals` 只过滤了 `_` 开头以及独立的 `tpl` / `dist` 片段，一个叫 `my.app` 的目录照样会把 `.` 带进正则，
 	 * 所以这里必须过一遍白名单。
 	 */
 	const knownEntries = [...locals.packageFolderNames, locals.sharedPackageFolderName]
