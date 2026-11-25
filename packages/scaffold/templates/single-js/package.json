@@ -14,10 +14,10 @@
     "lint:style": "stylelint '**/*.{css,scss,vue}' --cache --cache-location node_modules/.cache/stylelint/"
   },
   "dependencies": {
-    "@deot/helper": "^1.1.23",
+    "@deot/helper": "^1.1.24",
     "@deot/http": "^1.1.10",
     "@deot/style": "^1.3.1",
-    "@deot/vc": "^1.2.6",
+    "@deot/vc": "^1.2.7",
     "@zumer/snapdom": "^2.0.1",
     "dayjs": "^1.11.13",
     "echarts": "^6.0.0",
@@ -30,10 +30,6 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@deot/env": "^1.1.0",
-    "@deot/style-unocss": "^1.3.1",
-    "cross-env": "^10.1.0",
-    "postcss-html": "^1.8.0",
-    "unocss": "^66.10.0"
+    "@deot/env": "^1.1.0"
   }
 }

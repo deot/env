@@ -1,6 +1,6 @@
 # @deot/env-deps
 
-`@deot/env-deps` 是依赖容器，不提供代码入口。当前包只直接依赖 `@deot/dev`，用于让 `@deot/env` 项目获得统一版本的开发工具链。
+`@deot/env-deps` 是依赖容器，不提供代码入口。它带入 `@deot/dev` 工具链，以及业务项目直接使用的 `unocss` 和 `@deot/style-unocss`。
 
 ## 安装
 
@@ -21,7 +21,9 @@ pnpm add -D @deot/env-deps
 ```json
 {
   "dependencies": {
-    "@deot/dev": "^2.9.15"
+    "@deot/dev": "^2.10.0",
+    "@deot/style-unocss": "^1.3.1",
+    "unocss": "^66.10.0"
   }
 }
 ```
@@ -37,7 +39,7 @@ pnpm add -D @deot/env-deps
 | 共享工具与测试辅助 | `@deot/dev-shared`、`@deot/dev-test` |
 | 提交检查 | `@deot/dev-commitlint` |
 
-具体子包版本由当前 `@deot/dev` 决定，不由 `@deot/env-deps` 单独重复声明。
+`@deot/dev` 的子包版本由当前 `@deot/dev` 决定。`unocss` 和 `@deot/style-unocss` 由本包直接声明，业务项目只需要安装 `@deot/env`。模板开启了 `shamefullyHoist`，因此 `cross-env`、`typescript`、`vue-tsc`、`postcss-html` 这些由 `@deot/dev` 带入的命令和配置也能在项目里直接使用。
 
 ## 配置入口
 
