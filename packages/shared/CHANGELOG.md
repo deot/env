@@ -1,5 +1,13 @@
 # @deot/env-shared ChangeLog
 
+## v1.1.1
+
+_2026-11-25_
+
+### Bugfixes
+
+- fix: keep marketplace when scanning package folders ([7eea040](https://github.com/deot/env/commit/7eea040df0c02bad259e92cf8a88b841105b0d2a))
+
 ## v1.1.0
 
 _2026-11-23_

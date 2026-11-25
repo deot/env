@@ -1,5 +1,13 @@
 # @deot/env-scaffold ChangeLog
 
+## v1.1.1
+
+_2026-11-25_
+
+### Bugfixes
+
+- fix: bump @deot/env to 1.1.0 and drop photoswipe ([dcb45b3](https://github.com/deot/env/commit/dcb45b30b91d4d8025119743fbad7a313cf481b9))
+
 ## v1.1.0
 
 _2026-11-23_

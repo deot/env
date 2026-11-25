@@ -21,10 +21,10 @@ importers:
   packages/cli:
     dependencies:
       '@deot/env-dever':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../dever
       '@deot/env-scaffold':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../scaffold
       commander:
         specifier: ^15.0.0
@@ -49,10 +49,10 @@ importers:
         specifier: ^2.9.13
         version: 2.9.13
       '@deot/env-shared':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../shared
       '@deot/env-vue':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../vue
       '@deot/style-unocss':
         specifier: ^1.3.1
@@ -100,13 +100,13 @@ importers:
   packages/index:
     dependencies:
       '@deot/env-cli':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../cli
       '@deot/env-deps':
         specifier: ^1.1.0
         version: link:../deps
       '@deot/env-dever':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../dever
 
   packages/scaffold:
@@ -120,7 +120,7 @@ importers:
   packages/vue:
     dependencies:
       '@deot/env-shared':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: link:../shared
       '@testing-library/vue':
         specifier: ^8.1.0

@@ -1,5 +1,16 @@
 # @deot/env ChangeLog
 
+## v1.1.1
+
+_2026-11-25_
+
+### Bugfixes
+
+- fix(dever): let virtual html pass through dev proxy paths ([cc9bb9f](https://github.com/deot/env/commit/cc9bb9fe08ac3b786e9366216879640390464b8e))
+- fix(dever): restore content-type on virtual html responses ([87ffd83](https://github.com/deot/env/commit/87ffd830f72a6bdf8261d4ca9b03ed0653ba9218))
+- fix(shared): keep marketplace when scanning package folders ([7eea040](https://github.com/deot/env/commit/7eea040df0c02bad259e92cf8a88b841105b0d2a))
+- fix(scaffold): bump @deot/env to 1.1.0 and drop photoswipe ([dcb45b3](https://github.com/deot/env/commit/dcb45b30b91d4d8025119743fbad7a313cf481b9))
+
 ## v1.1.0
 
 _2026-11-23_
