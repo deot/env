@@ -1,5 +1,13 @@
 # @deot/env-deps ChangeLog
 
+## v1.1.2
+
+_2026-11-27_
+
+### Force Update Package
+
+- `1.1.0` -> `1.1.2`
+
 ## v1.1.0
 
 _2026-11-23_

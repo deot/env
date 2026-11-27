@@ -1,5 +1,13 @@
 # @deot/env-dever ChangeLog
 
+## v1.1.2
+
+_2026-11-27_
+
+### Updates
+
+- chore(shared): force-publish `1.1.1` -> `1.1.2`
+
 ## v1.1.1
 
 _2026-11-25_
